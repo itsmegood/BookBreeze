@@ -25,6 +25,8 @@ model User {
   roles       Role[]
   sessions    Session[]
   connections Connection[]
+  Transaction Transaction[]
+  Invoice     Invoice[]
 }
 
 model Note {
@@ -166,4 +168,71 @@ model Connection {
   userId String
 
   @@unique([providerName, providerId])
+}
+
+// * Account specific models
+// * This is for a simple personal finance app
+model Account {
+  id           Int           @id @default(autoincrement())
+  name         String
+  balance      Float
+  type         String
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  date        DateTime @default(now())
+  description String
+  amount      Float
+  type        String // Could be "income", "expense", "transfer", etc.
+  account     Account  @relation(fields: [accountId], references: [id])
+  accountId   Int
+  createdBy   User     @relation(fields: [userId], references: [id])
+  userId      String
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
+  invoiceId   Int?
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Invoice {
+  id           Int           @id @default(autoincrement())
+  dateIssued   DateTime      @default(now())
+  dueDate      DateTime
+  items        InvoiceItem[]
+  totalAmount  Float
+  status       String // Could be "paid", "unpaid", "overdue"
+  createdBy    User          @relation(fields: [userId], references: [id])
+  userId       String
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model InvoiceItem {
+  id          Int      @id @default(autoincrement())
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
+  invoiceId   Int
+  description String
+  quantity    Int
+  price       Float
+  total       Float    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Report {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  type        String // Could be "balance_sheet", "profit_loss", "cash_flow", etc.
+  periodStart DateTime
+  periodEnd   DateTime
+  data        String // Assuming the report is complex and might contain various types of data; JSON can be a flexible storage option
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
