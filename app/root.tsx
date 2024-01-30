@@ -230,8 +230,6 @@ function App() {
 		m => m.id === 'routes/c.$companyId+/_layout_company',
 	)
 
-	console.log('matches', matches)
-
 	const isOnSearchPage = matches.find(m => m.id === 'routes/users+/index')
 	const searchBar = isOnSearchPage ? null : <SearchBar status="idle" />
 	useToast(data.toast)
