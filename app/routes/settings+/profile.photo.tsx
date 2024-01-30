@@ -17,14 +17,12 @@ import {
 	useNavigation,
 } from '@remix-run/react'
 import { useState } from 'react'
-import { AuthenticityTokenInput } from 'remix-utils/csrf/react'
 import { z } from 'zod'
 import { ErrorList } from '#app/components/forms.tsx'
 import { Button } from '#app/components/ui/button.tsx'
 import { Icon } from '#app/components/ui/icon.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
 import { requireUserId } from '#app/utils/auth.server.ts'
-import { validateCSRF } from '#app/utils/csrf.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import {
 	getUserImgSrc,
@@ -75,7 +73,6 @@ export async function action({ request }: ActionFunctionArgs) {
 		request,
 		unstable_createMemoryUploadHandler({ maxPartSize: MAX_SIZE }),
 	)
-	await validateCSRF(formData, request.headers)
 
 	const submission = await parse(formData, {
 		schema: PhotoFormSchema.transform(async data => {
@@ -155,7 +152,6 @@ export default function PhotoRoute() {
 				onReset={() => setNewImageSrc(null)}
 				{...form.props}
 			>
-				<AuthenticityTokenInput />
 				<img
 					src={
 						newImageSrc ?? (data.user ? getUserImgSrc(data.user.image?.id) : '')
@@ -205,8 +201,8 @@ export default function PhotoRoute() {
 							pendingIntent === 'submit'
 								? 'pending'
 								: lastSubmissionIntent === 'submit'
-									? actionData?.status ?? 'idle'
-									: 'idle'
+								  ? actionData?.status ?? 'idle'
+								  : 'idle'
 						}
 					>
 						Save Photo
@@ -231,8 +227,8 @@ export default function PhotoRoute() {
 								pendingIntent === 'delete'
 									? 'pending'
 									: lastSubmissionIntent === 'delete'
-										? actionData?.status ?? 'idle'
-										: 'idle'
+									  ? actionData?.status ?? 'idle'
+									  : 'idle'
 							}
 						>
 							<Icon name="trash">
