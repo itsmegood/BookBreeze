@@ -1,12 +1,25 @@
-import { type MetaFunction } from '@remix-run/node'
+import {
+	type LoaderFunctionArgs,
+	redirect,
+	type MetaFunction,
+} from '@remix-run/node'
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from '#app/components/ui/tooltip.tsx'
+import { getUserId } from '#app/utils/auth.server.ts'
 import { cn } from '#app/utils/misc.tsx'
 import { logos } from './logos/logos.ts'
+
+// export async function loader({ request }: LoaderFunctionArgs) {
+// 	const userId = await getUserId(request)
+
+// 	if (userId) {
+// 		return redirect('/studio')
+// 	}
+// }
 
 export const meta: MetaFunction = () => [{ title: 'Epic Notes' }]
 
@@ -84,7 +97,7 @@ export default function Index() {
 									<TooltipTrigger asChild>
 										<a
 											href={logo.href}
-											className="grid size-20 place-items-center rounded-2xl bg-violet-600/10 p-4 transition hover:-rotate-6 hover:bg-violet-600/15 sm:size-24 dark:bg-violet-200 dark:hover:bg-violet-100"
+											className="grid size-20 place-items-center rounded-2xl bg-violet-600/10 p-4 transition hover:-rotate-6 hover:bg-violet-600/15 dark:bg-violet-200 dark:hover:bg-violet-100 sm:size-24"
 										>
 											<img src={logo.src} alt="" />
 										</a>
