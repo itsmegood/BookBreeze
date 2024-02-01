@@ -15,13 +15,13 @@ export function MobileNav({
 }) {
 	return (
 		<Sheet>
-			<SheetTrigger className="flex cursor-none items-center rounded-md border border-primary p-1 md:hidden">
+			<SheetTrigger className="flex cursor-none items-center rounded-md border border-primary p-1 lg:hidden">
 				<Icon name="menu" size="lg" />
 				<span className="sr-only">Toggle Menu</span>
 			</SheetTrigger>
 			<SheetContent
 				side="left"
-				className="h-screen overflow-y-auto border md:hidden"
+				className="h-screen overflow-y-auto border lg:hidden"
 			>
 				<div className="flex flex-col gap-4">
 					<div className="inline-flex">

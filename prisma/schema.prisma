@@ -19,15 +19,15 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  image        UserImage?
-  password     Password?
-  notes        Note[]
-  roles        Role[]
-  sessions     Session[]
-  userCompany  UserCompany[]
-  connections  Connection[]
-  transactions Transaction[]
-  invoices     Invoice[]
+  image         UserImage?
+  password      Password?
+  notes         Note[]
+  roles         Role[]
+  sessions      Session[]
+  userCompanies UserCompany[]
+  connections   Connection[]
+  transactions  Transaction[]
+  invoices      Invoice[]
 }
 
 model Note {
@@ -122,9 +122,9 @@ model Role {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users       User[]
-  permissions Permission[]
-  UserCompany UserCompany[]
+  users         User[]
+  permissions   Permission[]
+  userCompanies UserCompany[]
 }
 
 model Verification {

@@ -27,7 +27,8 @@
     "test:e2e:run": "cross-env CI=true playwright test",
     "test:e2e:install": "npx playwright install --with-deps chromium",
     "typecheck": "tsc",
-    "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
+    "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run",
+    "clean": "rimraf ./node_modules/.cache ./server/dist ./build ./public/build"
   },
   "eslintIgnore": [
     "/node_modules",
@@ -46,7 +47,7 @@
     "@epic-web/totp": "^1.1.1",
     "@nasa-gcn/remix-seo": "^2.0.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@prisma/client": "^5.9.0",
+    "@prisma/client": "^5.10.0-dev.1",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
@@ -88,7 +89,6 @@
     "litefs-js": "^1.1.2",
     "lru-cache": "^10.2.0",
     "morgan": "^1.10.0",
-    "prisma": "^5.9.0",
     "qrcode": "^1.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -148,7 +148,9 @@
     "prettier": "^3.2.4",
     "prettier-plugin-sql": "^0.18.0",
     "prettier-plugin-tailwindcss": "^0.5.11",
+    "prisma": "^5.10.0-dev.1",
     "remix-flat-routes": "^0.6.4",
+    "rimraf": "^5.0.5",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.12",

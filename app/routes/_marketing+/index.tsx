@@ -13,13 +13,15 @@ import { getUserId } from '#app/utils/auth.server.ts'
 import { cn } from '#app/utils/misc.tsx'
 import { logos } from './logos/logos.ts'
 
-// export async function loader({ request }: LoaderFunctionArgs) {
-// 	const userId = await getUserId(request)
+export async function loader({ request }: LoaderFunctionArgs) {
+	const userId = await getUserId(request)
 
-// 	if (userId) {
-// 		return redirect('/studio')
-// 	}
-// }
+	if (userId) {
+		return redirect('/studio')
+	}
+
+	return null
+}
 
 export const meta: MetaFunction = () => [{ title: 'Epic Notes' }]
 
@@ -43,7 +45,7 @@ const rowClasses: Record<(typeof logos)[number]['row'], string> = {
 export default function Index() {
 	return (
 		<main className="font-poppins grid h-full place-items-center">
-			<div className="grid place-items-center px-4 py-16 xl:grid-cols-2 xl:gap-24">
+			<div className="grid place-items-center px-4 py-12 xl:grid-cols-2 xl:gap-24">
 				<div className="flex max-w-md flex-col items-center text-center xl:order-2 xl:items-start xl:text-left">
 					<a
 						href="https://www.epicweb.dev/stack"

@@ -63,6 +63,18 @@ export async function requireUserId(
 	return userId
 }
 
+export async function logoutAndRedirect(request: Request, redirectTo?: string) {
+	const requestUrl = new URL(request.url)
+	const loginParams = new URLSearchParams([
+		['redirectTo', `${requestUrl.pathname}${requestUrl.search}`],
+	])
+
+	// * Maybe change this to add loginParams to the redirectTo url or other refactor
+	redirectTo = redirectTo ?? `/login?${loginParams}`
+	await logout({ request, redirectTo })
+	return redirect(redirectTo)
+}
+
 export async function requireAnonymous(request: Request) {
 	const userId = await getUserId(request)
 	if (userId) {
