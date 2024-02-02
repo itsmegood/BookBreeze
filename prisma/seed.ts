@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { promiseHash } from 'remix-utils/promise'
+import { PLATFORM_STATUS } from '#app/utils/constants/platform-status'
+import { TRANSACTION_STATUS } from '#app/utils/constants/transaction-status'
 import { prisma } from '#app/utils/db.server.ts'
 import {
 	cleanupDb,
@@ -20,7 +22,9 @@ async function seed() {
 	console.timeEnd('🧹 Cleaned up the database...')
 
 	console.time('🔑 Created permissions...')
-	const entities = ['user', 'note']
+
+	// ! Maybe add transactions, sales, purchase, etc. entities
+	const entities = ['user', 'note', 'company']
 	const actions = ['create', 'read', 'update', 'delete']
 	const accesses = ['own', 'any'] as const
 	for (const entity of entities) {
@@ -32,7 +36,48 @@ async function seed() {
 	}
 	console.timeEnd('🔑 Created permissions...')
 
+	console.time('📊 Created Status...')
+
+	interface StatusInfoInt {
+		[statusKey: string]: {
+			KEY: string
+			LABEL: string
+			COLOR: string
+		}
+	}
+
+	const TransactionStatusInfo: StatusInfoInt = TRANSACTION_STATUS
+
+	for (const statusType in TransactionStatusInfo) {
+		const status = TransactionStatusInfo[statusType]
+
+		await prisma.transactionStatus.create({
+			data: {
+				key: status.KEY,
+				label: status.LABEL,
+				color: status.COLOR,
+			},
+		})
+	}
+
+	const PlatformStatusInfo: StatusInfoInt = PLATFORM_STATUS
+
+	for (const statusType in PlatformStatusInfo) {
+		const status = PlatformStatusInfo[statusType]
+
+		await prisma.platformStatus.create({
+			data: {
+				key: status.KEY,
+				label: status.LABEL,
+				color: status.COLOR,
+			},
+		})
+	}
+
+	console.timeEnd('📊 Created Status...')
+
 	console.time('👑 Created roles...')
+
 	await prisma.role.create({
 		data: {
 			name: 'admin',
@@ -88,6 +133,7 @@ async function seed() {
 							},
 						})),
 					},
+					platformStatusKey: PLATFORM_STATUS.ACTIVE.KEY,
 				},
 			})
 			.catch(e => {
@@ -146,6 +192,7 @@ async function seed() {
 				create: { providerName: 'github', providerId: githubUser.profile.id },
 			},
 			roles: { connect: [{ name: 'admin' }, { name: 'user' }] },
+			platformStatusKey: PLATFORM_STATUS.ACTIVE.KEY,
 			notes: {
 				create: [
 					{

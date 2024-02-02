@@ -19,7 +19,11 @@ test('The user profile when not logged in as self', async () => {
 		userImages[faker.number.int({ min: 0, max: userImages.length - 1 })]
 	const user = await prisma.user.create({
 		select: { id: true, username: true, name: true },
-		data: { ...createUser(), image: { create: userImage } },
+		data: {
+			...createUser(),
+			image: { create: userImage },
+			platformStatusKey: 'ACTIVE',
+		},
 	})
 	const App = createRemixStub([
 		{
@@ -43,7 +47,11 @@ test('The user profile when logged in as self', async () => {
 		userImages[faker.number.int({ min: 0, max: userImages.length - 1 })]
 	const user = await prisma.user.create({
 		select: { id: true, username: true, name: true },
-		data: { ...createUser(), image: { create: userImage } },
+		data: {
+			...createUser(),
+			image: { create: userImage },
+			platformStatusKey: 'ACTIVE',
+		},
 	})
 	const session = await prisma.session.create({
 		select: { id: true },

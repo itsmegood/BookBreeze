@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import { Authenticator } from 'remix-auth'
 import { safeRedirect } from 'remix-utils/safe-redirect'
 import { connectionSessionStorage, providers } from './connections.server.ts'
+import { PLATFORM_STATUS } from './constants/platform-status.ts'
 import { prisma } from './db.server.ts'
 import { combineHeaders, downloadFile } from './misc.tsx'
 import { type ProviderUser } from './providers/provider.ts'
@@ -83,13 +84,14 @@ export async function requireAnonymous(request: Request) {
 }
 
 export async function login({
-	username,
+	// username,
+	email,
 	password,
 }: {
-	username: User['username']
+	email: User['email']
 	password: string
 }) {
-	const user = await verifyUserPassword({ username }, password)
+	const user = await verifyUserPassword({ email }, password)
 	if (!user) return null
 	const session = await prisma.session.create({
 		select: { id: true, expirationDate: true, userId: true },
@@ -101,16 +103,36 @@ export async function login({
 	return session
 }
 
-export async function resetUserPassword({
-	username,
+// export async function resetUserPassword({
+// 	username,
+// 	password,
+// }: {
+// 	username: User['username']
+// 	password: string
+// }) {
+// 	const hashedPassword = await getPasswordHash(password)
+// 	return prisma.user.update({
+// 		where: { username },
+// 		data: {
+// 			password: {
+// 				update: {
+// 					hash: hashedPassword,
+// 				},
+// 			},
+// 		},
+// 	})
+// }
+
+export async function resetEmailPassword({
+	email,
 	password,
 }: {
-	username: User['username']
+	email: User['email']
 	password: string
 }) {
 	const hashedPassword = await getPasswordHash(password)
 	return prisma.user.update({
-		where: { username },
+		where: { email },
 		data: {
 			password: {
 				update: {
@@ -143,6 +165,7 @@ export async function signup({
 					username: username.toLowerCase(),
 					name,
 					roles: { connect: { name: 'user' } },
+					platformStatusKey: PLATFORM_STATUS.ACTIVE.KEY,
 					password: {
 						create: {
 							hash: hashedPassword,
@@ -181,6 +204,7 @@ export async function signupWithConnection({
 					username: username.toLowerCase(),
 					name,
 					roles: { connect: { name: 'user' } },
+					platformStatusKey: PLATFORM_STATUS.ACTIVE.KEY,
 					connections: { create: { providerId, providerName } },
 					image: imageUrl
 						? { create: await downloadFile(imageUrl) }
@@ -230,7 +254,7 @@ export async function getPasswordHash(password: string) {
 }
 
 export async function verifyUserPassword(
-	where: Pick<User, 'username'> | Pick<User, 'id'>,
+	where: Pick<User, 'email'> | Pick<User, 'id'>,
 	password: Password['hash'],
 ) {
 	const userWithPassword = await prisma.user.findUnique({

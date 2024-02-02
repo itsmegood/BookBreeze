@@ -19,10 +19,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  password         Password?
-  image            UserImage?
-  platformStatus   PlatformStatus? @relation(fields: [platformStatusId], references: [id])
-  platformStatusId Int?
+  password          Password?
+  image             UserImage?
+  platformStatus    PlatformStatus @relation(fields: [platformStatusKey], references: [key])
+  platformStatusKey String
 
   notes         Note[]
   roles         Role[]
@@ -186,6 +186,9 @@ model PlatformStatus {
   users     User[]
 }
 
+// * Account specific models
+// * This is for a simple personal finance app
+
 model TransactionStatus {
   id    Int     @id @default(autoincrement())
   key   String  @unique
@@ -201,9 +204,6 @@ model TransactionStatus {
   purchaseBills PurchaseBill[]
 }
 
-// * Account specific models
-// * This is for a simple personal finance app
-
 // Company model represents a business entity or organization that the accounting system will handle. 
 model Company {
   id   String @id @default(cuid())
@@ -212,8 +212,8 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  platformStatus   PlatformStatus? @relation(fields: [platformStatusId], references: [id])
-  platformStatusId Int?
+  platformStatus    PlatformStatus @relation(fields: [platformStatusKey], references: [key])
+  platformStatusKey String
 
   users        UserCompany[] // Users associated with the company.
   accounts     Account[] // Financial accounts belonging to the company.
@@ -271,14 +271,14 @@ model Transaction {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  company             Company            @relation(fields: [companyId], references: [id])
-  companyId           String
-  account             Account            @relation(fields: [accountId], references: [id])
-  accountId           Int
-  issuedBy            UserCompany?       @relation(fields: [issuedById], references: [id])
-  issuedById          Int?
-  transactionStatus   TransactionStatus? @relation(fields: [transactionStatusId], references: [id])
-  transactionStatusId Int?
+  company              Company           @relation(fields: [companyId], references: [id])
+  companyId            String
+  account              Account           @relation(fields: [accountId], references: [id])
+  accountId            Int
+  transactionStatus    TransactionStatus @relation(fields: [transactionStatusKey], references: [key])
+  transactionStatusKey String
+  issuedBy             UserCompany?      @relation(fields: [issuedById], references: [id])
+  issuedById           Int?
 }
 
 // Invoice model represents bills to be sent to clients or received from suppliers,
@@ -292,14 +292,14 @@ model SaleInvoice {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  company             Company            @relation(fields: [companyId], references: [id])
-  companyId           String
-  issuedTo            Account            @relation(fields: [issuedToId], references: [id])
-  issuedToId          Int
-  issuedBy            UserCompany?       @relation(fields: [issuedById], references: [id])
-  issuedById          Int?
-  transactionStatus   TransactionStatus? @relation(fields: [transactionStatusId], references: [id])
-  transactionStatusId Int?
+  company              Company           @relation(fields: [companyId], references: [id])
+  companyId            String
+  issuedTo             Account           @relation(fields: [issuedToId], references: [id])
+  issuedToId           Int
+  transactionStatus    TransactionStatus @relation(fields: [transactionStatusKey], references: [key])
+  transactionStatusKey String
+  issuedBy             UserCompany?      @relation(fields: [issuedById], references: [id])
+  issuedById           Int?
 
   items InvoiceItem[] // Line items detailing individual charges on the invoice.
 }
@@ -335,10 +335,10 @@ model PurchaseBill {
   issuedToId Int
 
   // Optional: Relate to a user who manages the bill
-  issuedBy            UserCompany?       @relation(fields: [issuedById], references: [id])
-  issuedById          Int?
-  transactionStatus   TransactionStatus? @relation(fields: [transactionStatusId], references: [id])
-  transactionStatusId Int?
+  transactionStatus    TransactionStatus @relation(fields: [transactionStatusKey], references: [key])
+  transactionStatusKey String
+  issuedBy             UserCompany?      @relation(fields: [issuedById], references: [id])
+  issuedById           Int?
 
   purchaseBillItems PurchaseBillItem[] // Individual items on the bill.
 }

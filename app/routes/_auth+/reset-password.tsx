@@ -12,14 +12,14 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { ErrorList, Field } from '#app/components/forms.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
-import { requireAnonymous, resetUserPassword } from '#app/utils/auth.server.ts'
+import { requireAnonymous, resetEmailPassword } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import { useIsPending } from '#app/utils/misc.tsx'
 import { PasswordAndConfirmPasswordSchema } from '#app/utils/user-validation.ts'
 import { verifySessionStorage } from '#app/utils/verification.server.ts'
 import { type VerifyFunctionArgs } from './verify.tsx'
 
-const resetPasswordUsernameSessionKey = 'resetPasswordUsername'
+const resetPasswordEmailSessionKey = 'resetPasswordEmail'
 
 export async function handleVerification({ submission }: VerifyFunctionArgs) {
 	invariant(
@@ -28,8 +28,9 @@ export async function handleVerification({ submission }: VerifyFunctionArgs) {
 	)
 	const target = submission.value.target
 	const user = await prisma.user.findFirst({
-		where: { OR: [{ email: target }, { username: target }] },
-		select: { email: true, username: true },
+		// where: { OR: [{ email: target }, { username: target }] },
+		where: { email: target },
+		select: { email: true },
 	})
 	// we don't want to say the user is not found if the email is not found
 	// because that would allow an attacker to check if an email is registered
@@ -45,7 +46,7 @@ export async function handleVerification({ submission }: VerifyFunctionArgs) {
 	}
 
 	const verifySession = await verifySessionStorage.getSession()
-	verifySession.set(resetPasswordUsernameSessionKey, user.username)
+	verifySession.set(resetPasswordEmailSessionKey, user.email)
 	return redirect('/reset-password', {
 		headers: {
 			'set-cookie': await verifySessionStorage.commitSession(verifySession),
@@ -55,27 +56,25 @@ export async function handleVerification({ submission }: VerifyFunctionArgs) {
 
 const ResetPasswordSchema = PasswordAndConfirmPasswordSchema
 
-async function requireResetPasswordUsername(request: Request) {
+async function requireResetPasswordEmail(request: Request) {
 	await requireAnonymous(request)
 	const verifySession = await verifySessionStorage.getSession(
 		request.headers.get('cookie'),
 	)
-	const resetPasswordUsername = verifySession.get(
-		resetPasswordUsernameSessionKey,
-	)
-	if (typeof resetPasswordUsername !== 'string' || !resetPasswordUsername) {
+	const resetPasswordEmail = verifySession.get(resetPasswordEmailSessionKey)
+	if (typeof resetPasswordEmail !== 'string' || !resetPasswordEmail) {
 		throw redirect('/login')
 	}
-	return resetPasswordUsername
+	return resetPasswordEmail
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-	const resetPasswordUsername = await requireResetPasswordUsername(request)
-	return json({ resetPasswordUsername })
+	const resetPasswordEmail = await requireResetPasswordEmail(request)
+	return json({ resetPasswordEmail })
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-	const resetPasswordUsername = await requireResetPasswordUsername(request)
+	const resetPasswordEmail = await requireResetPasswordEmail(request)
 	const formData = await request.formData()
 	const submission = parseWithZod(formData, {
 		schema: ResetPasswordSchema,
@@ -88,7 +87,7 @@ export async function action({ request }: ActionFunctionArgs) {
 	}
 	const { password } = submission.value
 
-	await resetUserPassword({ username: resetPasswordUsername, password })
+	await resetEmailPassword({ email: resetPasswordEmail, password })
 	const verifySession = await verifySessionStorage.getSession()
 	return redirect('/login', {
 		headers: {
@@ -121,7 +120,7 @@ export default function ResetPasswordPage() {
 			<div className="text-center">
 				<h1 className="text-h1">Password Reset</h1>
 				<p className="mt-3 text-body-md text-muted-foreground">
-					Hi, {data.resetPasswordUsername}. No worries. It happens all the time.
+					Hi, {data.resetPasswordEmail}. No worries. It happens all the time.
 				</p>
 			</div>
 			<div className="mx-auto mt-16 min-w-full max-w-sm sm:min-w-[368px]">
