@@ -152,7 +152,7 @@ function UserDropdown() {
 					className="relative rounded-full border border-primary bg-secondary p-1"
 				>
 					<div className="absolute right-0 top-0 rounded-full bg-background p-[1px]">
-						<div className="z-10 h-2 w-2 rounded-full bg-emerald-500"></div>
+						<div className="z-10 h-2 w-2 rounded-full bg-primary"></div>
 					</div>
 					<img
 						className="h-7 w-7 rounded-full object-cover"
@@ -168,13 +168,13 @@ function UserDropdown() {
 				<DropdownMenuContent
 					sideOffset={22}
 					align="end"
-					className="min-w-[20rem] rounded-sm border border-primary"
+					className="min-w-[16rem] rounded-sm border border-primary"
 				>
 					<DropdownMenuItem asChild className="border-b p-3">
 						<Link
 							prefetch="intent"
 							to={`/users/${user.username}`}
-							className="inline-flex w-full items-center gap-2 bg-muted/30 hover:bg-accent"
+							className="flex w-full items-center gap-2 bg-muted/30 hover:bg-accent"
 						>
 							<div className="rounded-full bg-background p-1">
 								<img
@@ -189,10 +189,8 @@ function UserDropdown() {
 							</div>
 						</Link>
 					</DropdownMenuItem>
-					<div className="border-b p-2">
-						<DropdownMenuItem asChild className="p-2">
-							<div className="text-xs font-bold">BACKER</div>
-						</DropdownMenuItem>
+					{/* <div className="border-b p-2">
+						<div className="p-2 text-xs font-bold">BACKER</div>
 						<DropdownMenuItem asChild className="p-2">
 							<Link prefetch="intent" to="/" className="hover:bg-muted/30">
 								Home
@@ -216,11 +214,9 @@ function UserDropdown() {
 								Backed Projects
 							</Link>
 						</DropdownMenuItem>
-					</div>
+					</div> */}
 					<div className="border-b p-2">
-						<DropdownMenuItem asChild className="p-2">
-							<div className="text-xs font-bold">CREATOR</div>
-						</DropdownMenuItem>
+						<div className="p-2 text-xs font-bold">DASHBOARD</div>
 						<DropdownMenuItem asChild className="p-2">
 							<Link
 								prefetch="intent"
@@ -233,19 +229,19 @@ function UserDropdown() {
 						<DropdownMenuItem asChild className="p-2">
 							<Link
 								prefetch="intent"
-								to="/studio/projects"
+								to="/studio/c"
 								className="hover:bg-muted/30"
 							>
-								Created Projects
+								Companies
 							</Link>
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild className="p-2">
 							<Link
 								prefetch="intent"
-								to="/studio/projects/new"
+								to="/studio/c/new"
 								className="hover:bg-muted/30"
 							>
-								Start a New Project
+								Create a New Company
 							</Link>
 						</DropdownMenuItem>
 					</div>

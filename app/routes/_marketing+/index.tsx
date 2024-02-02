@@ -1,12 +1,25 @@
-import { type MetaFunction } from '@remix-run/node'
+import {
+	type LoaderFunctionArgs,
+	type MetaFunction,
+	redirect,
+} from '@remix-run/node'
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from '#app/components/ui/tooltip.tsx'
+import { getUserId } from '#app/utils/auth.server.ts'
 import { cn } from '#app/utils/misc.tsx'
 import { logos } from './logos/logos.ts'
+
+export async function loader({ request }: LoaderFunctionArgs) {
+	const userId = await getUserId(request)
+
+	if (userId) return redirect('/studio')
+
+	return null
+}
 
 export const meta: MetaFunction = () => [{ title: 'Epic Notes' }]
 

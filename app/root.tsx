@@ -207,10 +207,6 @@ function App() {
 	const data = useLoaderData<typeof loader>()
 	const nonce = useNonce()
 	const theme = useTheme()
-	// const matches = useMatches()
-	// const isOnCompanyPage = !!matches.find(
-	// 	m => m.id === 'routes/c.$companyId+/_layout_company',
-	// )
 
 	useToast(data.toast)
 
@@ -219,12 +215,10 @@ function App() {
 			<div className="flex h-screen flex-col justify-between">
 				<Outlet />
 
-				{/* {!isOnCompanyPage && ( */}
 				<div className="container flex justify-between p-6">
 					<Logo />
 					<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
 				</div>
-				{/* )} */}
 			</div>
 			<EpicToaster closeButton position="top-center" theme={theme} />
 			<EpicProgress />

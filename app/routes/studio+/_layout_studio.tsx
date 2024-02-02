@@ -6,7 +6,7 @@ export default function LayoutStudio() {
 		<>
 			<HeaderNav clean />
 
-			<div className="mx-auto w-full max-w-7xl flex-1 border-2">
+			<div className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-6">
 				<Outlet />
 			</div>
 		</>
