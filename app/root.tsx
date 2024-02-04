@@ -215,13 +215,13 @@ function App() {
 			<div className="flex h-screen flex-col justify-between">
 				<Outlet />
 
-				<div>
+				{/* <div>
 					<hr className="border-primary" />
 					<div className="container flex justify-between p-6">
 						<Logo />
 						<ThemeSwitch />
 					</div>
-				</div>
+				</div> */}
 			</div>
 			<EpicToaster closeButton position="top-center" theme={theme} />
 			<EpicProgress />

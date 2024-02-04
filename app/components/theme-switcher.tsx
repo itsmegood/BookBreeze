@@ -7,6 +7,7 @@ import {
 } from '#app/root'
 import { type Theme } from '#app/utils/theme.server'
 import { Icon } from './ui/icon'
+import { Button } from './ui/button'
 
 // export function ThemeSwitch({
 // 	userPreference,
@@ -51,12 +52,14 @@ export function ThemeSwitch() {
 		<fetcher.Form method="POST" action="/" {...getFormProps(form)}>
 			<input type="hidden" name="theme" value={nextMode} />
 			<div className="flex gap-2">
-				<button
+				<Button
+					variant="outline_2"
 					type="submit"
-					className="flex h-8 w-8 cursor-pointer items-center justify-center"
+					size="icon"
+					className="rounded-full"
 				>
 					{modeLabel[mode]}
-				</button>
+				</Button>
 			</div>
 		</fetcher.Form>
 	)

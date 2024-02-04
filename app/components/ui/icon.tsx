@@ -46,9 +46,7 @@ export function Icon({
 }) {
 	if (children) {
 		return (
-			<span
-				className={`inline-flex items-center ${childrenSizeClassName[size]}`}
-			>
+			<span className={`flex items-center ${childrenSizeClassName[size]}`}>
 				<Icon name={name} size={size} className={className} {...props} />
 				{children}
 			</span>
@@ -57,7 +55,7 @@ export function Icon({
 	return (
 		<svg
 			{...props}
-			className={cn(sizeClassName[size], 'inline self-center', className)}
+			className={cn(sizeClassName[size], 'flex items-center', className)}
 		>
 			<use href={`${href}#${name}`} />
 		</svg>

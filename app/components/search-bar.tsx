@@ -59,7 +59,7 @@ export function SearchBar({
 					id={id}
 					defaultValue={defaultValue}
 					placeholder="Search"
-					className="w-full"
+					className="h-full w-full"
 					// autoFocus={autoFocusSearch}
 				/>
 			</div>

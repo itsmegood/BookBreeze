@@ -138,7 +138,7 @@ export function HeaderNav({
 	)
 }
 
-function UserDropdown() {
+export function UserDropdown() {
 	const user = useUser()
 	const submit = useSubmit()
 	const formRef = useRef<HTMLFormElement>(null)
@@ -149,16 +149,22 @@ function UserDropdown() {
 				<div
 					// this is for progressive enhancement
 					onClick={e => e.preventDefault()}
-					className="relative rounded-full border border-primary bg-secondary p-1"
+					className="relative"
 				>
 					<div className="absolute right-0 top-0 rounded-full bg-background p-[1px]">
 						<div className="z-10 h-2 w-2 rounded-full bg-primary"></div>
 					</div>
-					<img
-						className="h-7 w-7 rounded-full object-cover"
-						alt={user.name ?? user.username}
-						src={getUserImgSrc(user.image?.id)}
-					/>
+					<Button
+						variant="outline_2"
+						size="icon"
+						className="rounded-full p-1 hover:bg-background"
+					>
+						<img
+							className="h-6 rounded-full"
+							alt={user.name ?? user.username}
+							src={getUserImgSrc(user.image?.id)}
+						/>
+					</Button>
 					{/* <span className="font-bold text-body-sm">
 						{user.name ?? user.username}
 					</span> */}
@@ -170,7 +176,7 @@ function UserDropdown() {
 					align="end"
 					className="min-w-[16rem] rounded-sm border border-primary"
 				>
-					<DropdownMenuItem asChild className="border-b p-3">
+					<DropdownMenuItem asChild className="p-3">
 						<Link
 							prefetch="intent"
 							to={`/users/${user.username}`}
@@ -189,33 +195,8 @@ function UserDropdown() {
 							</div>
 						</Link>
 					</DropdownMenuItem>
-					{/* <div className="border-b p-2">
-						<div className="p-2 text-xs font-bold">BACKER</div>
-						<DropdownMenuItem asChild className="p-2">
-							<Link prefetch="intent" to="/" className="hover:bg-muted/30">
-								Home
-							</Link>
-						</DropdownMenuItem>
-						<DropdownMenuItem asChild className="p-2">
-							<Link
-								prefetch="intent"
-								to="/projects"
-								className="hover:bg-muted/30"
-							>
-								Discover
-							</Link>
-						</DropdownMenuItem>
-						<DropdownMenuItem asChild className="p-2">
-							<Link
-								prefetch="intent"
-								to="/studio/backed-projects"
-								className="hover:bg-muted/30"
-							>
-								Backed Projects
-							</Link>
-						</DropdownMenuItem>
-					</div> */}
-					<div className="border-b p-2">
+					<hr />
+					<div className="p-2">
 						<div className="p-2 text-xs font-bold">DASHBOARD</div>
 						<DropdownMenuItem asChild className="p-2">
 							<Link
@@ -245,6 +226,7 @@ function UserDropdown() {
 							</Link>
 						</DropdownMenuItem>
 					</div>
+					<hr />
 					<DropdownMenuItem
 						asChild
 						// this prevents the menu from closing before the form submission is completed
@@ -252,7 +234,7 @@ function UserDropdown() {
 							event.preventDefault()
 							submit(formRef.current)
 						}}
-						className="cursor-pointer p-4 text-sm"
+						className="cursor-pointer p-4  text-sm"
 					>
 						<Form
 							action="/logout"
