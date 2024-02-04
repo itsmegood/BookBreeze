@@ -1,4 +1,3 @@
-import { getFormProps, useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { invariantResponse } from '@epic-web/invariant'
 import { cssBundleHref } from '@remix-run/css-bundle'
@@ -18,17 +17,18 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
-	useFetcher,
 	useFetchers,
 	useLoaderData,
+	useRouteLoaderData,
 } from '@remix-run/react'
 import { withSentry } from '@sentry/remix'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
 import { GeneralErrorBoundary } from './components/error-boundary.tsx'
 import { EpicProgress } from './components/progress-bar.tsx'
+import { ThemeSwitch } from './components/theme-switcher.tsx'
 import { useToast } from './components/toaster.tsx'
-import { Icon, href as iconsHref } from './components/ui/icon.tsx'
+import { href as iconsHref } from './components/ui/icon.tsx'
 import { EpicToaster } from './components/ui/sonner.tsx'
 import tailwindStyleSheetUrl from './styles/tailwind.css'
 import { getUserId, logout } from './utils/auth.server.ts'
@@ -215,9 +215,12 @@ function App() {
 			<div className="flex h-screen flex-col justify-between">
 				<Outlet />
 
-				<div className="container flex justify-between p-6">
-					<Logo />
-					<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
+				<div>
+					<hr className="border-primary" />
+					<div className="container flex justify-between p-6">
+						<Logo />
+						<ThemeSwitch />
+					</div>
 				</div>
 			</div>
 			<EpicToaster closeButton position="top-center" theme={theme} />
@@ -250,6 +253,10 @@ function AppWithProviders() {
 
 export default withSentry(AppWithProviders)
 
+export function useRootLoaderData() {
+	return useRouteLoaderData<typeof loader>('root')!
+}
+
 /**
  * @returns the user's theme preference, or the client hint theme if the user
  * has not set a preference.
@@ -281,51 +288,6 @@ export function useOptimisticThemeMode() {
 			return submission.value.theme
 		}
 	}
-}
-
-function ThemeSwitch({ userPreference }: { userPreference?: Theme | null }) {
-	const fetcher = useFetcher<typeof action>()
-
-	const [form] = useForm({
-		id: 'theme-switch',
-		lastResult: fetcher.data?.result,
-	})
-
-	const optimisticMode = useOptimisticThemeMode()
-	const mode = optimisticMode ?? userPreference ?? 'system'
-	const nextMode =
-		mode === 'system' ? 'light' : mode === 'light' ? 'dark' : 'system'
-	const modeLabel = {
-		light: (
-			<Icon name="sun">
-				<span className="sr-only">Light</span>
-			</Icon>
-		),
-		dark: (
-			<Icon name="moon">
-				<span className="sr-only">Dark</span>
-			</Icon>
-		),
-		system: (
-			<Icon name="laptop">
-				<span className="sr-only">System</span>
-			</Icon>
-		),
-	}
-
-	return (
-		<fetcher.Form method="POST" {...getFormProps(form)}>
-			<input type="hidden" name="theme" value={nextMode} />
-			<div className="flex gap-2">
-				<button
-					type="submit"
-					className="flex h-8 w-8 cursor-pointer items-center justify-center"
-				>
-					{modeLabel[mode]}
-				</button>
-			</div>
-		</fetcher.Form>
-	)
 }
 
 export function ErrorBoundary() {

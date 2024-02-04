@@ -10,6 +10,7 @@ import { Field } from '#app/components/forms'
 import { requireUserId } from '#app/utils/auth.server'
 import { prisma } from '#app/utils/db.server'
 import { redirectWithToast } from '#app/utils/toast.server'
+import { PLATFORM_STATUS } from '#app/utils/constants/platform-status'
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	await requireUserId(request)
@@ -73,8 +74,26 @@ export async function action({ request }: ActionFunctionArgs) {
 				create: {
 					userId: userId,
 					isOwner: true,
+
+					// ! Play with roles
+					// Role: {
+					// 	connect: {
+					// 		name: 'company',
+					// 		permissions: {
+					// 			some: {
+					// 				access: {
+					// 					contains: 'own',
+					// 				},
+					// 				action: {
+					// 					contains: '',
+					// 				},
+					// 			},
+					// 		},
+					// 	},
+					// },
 				},
 			},
+			platformStatusKey: PLATFORM_STATUS.ACTIVE.KEY,
 		},
 		select: {
 			id: true,

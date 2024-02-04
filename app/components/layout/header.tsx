@@ -60,7 +60,7 @@ export function HeaderNav({
 			// 		: 'shadow-sm'
 			// }
 			>
-				<nav className="flex w-full items-center justify-between p-6">
+				<nav className="container flex justify-between p-6">
 					<div className="flex items-center justify-between gap-2 md:w-1/4">
 						{mobileNavItems && <MobileNav menuItems={mobileNavItems} />}
 

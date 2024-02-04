@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from '@remix-run/react'
+import { Link, NavLink, Outlet } from '@remix-run/react'
+import { ThemeSwitch } from '#app/components/theme-switcher'
 
 const companyRoutes = [
 	{
@@ -21,9 +22,14 @@ const companyRoutes = [
 
 export default function LayoutCompany() {
 	return (
-		<div className="flex h-full flex-col lg:flex-row">
+		<div className="relative flex min-h-full flex-col lg:flex-row">
 			<nav className="border-r bg-muted p-4 lg:w-2/12">
-				<h1 className="px-2 text-h3 text-primary">BookBreeze</h1>
+				<Link
+					to="/"
+					className="px-2 text-h5 font-semibold text-primary md:text-h4"
+				>
+					䷸ Book<span className="text-sky-400">Breeze</span>
+				</Link>
 				<ul className="my-10 text-lg font-semibold">
 					<li>
 						<NavLink
@@ -50,12 +56,10 @@ export default function LayoutCompany() {
 						</li>
 					))}
 				</ul>
+				<ThemeSwitch />
 			</nav>
 
-			<section className="p-4 lg:w-10/12">
-				<header className="bg-gray-200 p-4">
-					<h2 className="text-xl font-semibold">Header</h2>
-				</header>
+			<section className="overflow-y-auto bg-red-400 p-4 lg:w-10/12">
 				<Outlet />
 			</section>
 		</div>
