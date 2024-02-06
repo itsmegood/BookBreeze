@@ -28,8 +28,8 @@ To set up the Book Breeze on your local machine, execute the following steps:
 
 ```sh
 # Clone the repository
-git clone https://github.com/yourusername/book-breeze.git
-cd book-breeze
+git clone https://github.com/itsmegood/BookBreeze.git
+cd BookBreeze
 
 # Install dependencies
 npm install
