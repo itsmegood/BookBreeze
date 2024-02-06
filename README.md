@@ -48,7 +48,6 @@ npm run dev
 
 In-depth documentation covering Book Breeze's features, configuration, and usage instructions can be found in the `docs` folder. -->
 
-÷
 <!-- ## Contributing
 
 We welcome contributions to Book Breeze! Please read our `CONTRIBUTING.md` file to learn how you can contribute to the project. -->
