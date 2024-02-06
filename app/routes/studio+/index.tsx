@@ -64,17 +64,11 @@ export default function StudioIndex() {
 
 			<table className="min-w-full divide-y">
 				<thead>
-					<tr>
-						<th
-							scope="col"
-							className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold sm:pl-0"
-						>
+					<tr className="text-left text-sm font-semibold">
+						<th scope="col" className="py-3.5 pl-4 pr-3 sm:pl-0">
 							Name
 						</th>
-						<th
-							scope="col"
-							className="hidden px-3 py-3.5 text-left text-sm font-semibold lg:table-cell"
-						>
+						<th scope="col" className="hidden px-3 py-3.5 lg:table-cell">
 							Role
 						</th>
 						<th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
@@ -84,12 +78,12 @@ export default function StudioIndex() {
 				</thead>
 				<tbody className="divide-y">
 					{data.user.userCompanies.map(userCompany => (
-						<tr key={userCompany.company.id} className="text-sm">
+						<tr key={userCompany.company.id}>
 							<td className="w-full max-w-0 py-4 pl-4 pr-3 font-medium sm:w-auto sm:max-w-none sm:pl-0">
 								{userCompany.company.name}
 								<dl className="font-normal lg:hidden">
 									<dt className="sr-only sm:hidden">Role</dt>
-									<dd className="mt-1 truncate sm:hidden">
+									<dd className="mt-1 truncate text-sm sm:hidden">
 										{userCompany.isOwner ? 'Owner' : 'Employee'}
 									</dd>
 								</dl>

@@ -6,8 +6,8 @@ import {
 	useRootLoaderData,
 } from '#app/root'
 import { type Theme } from '#app/utils/theme.server'
-import { Icon } from './ui/icon'
 import { Button } from './ui/button'
+import { Icon } from './ui/icon'
 
 // export function ThemeSwitch({
 // 	userPreference,
@@ -54,7 +54,7 @@ export function ThemeSwitch() {
 			<div className="flex gap-2">
 				<Button
 					variant="outline_2"
-					type="submit"
+					// type="submit"
 					size="icon"
 					className="rounded-full"
 				>

@@ -7,8 +7,8 @@ const salesRoutes = [
 		end: true,
 	},
 	{
-		title: 'Invoices',
-		href: 'invoices',
+		title: 'Bills',
+		href: 'Bills',
 	},
 	{
 		title: 'Customers',
@@ -24,10 +24,10 @@ const salesRoutes = [
 	},
 ]
 
-export default function SalesLayout() {
+export default function PurchasesLayout() {
 	return (
 		<>
-			<h1 className="text-h3 md:text-h2">Sales</h1>
+			<h1 className="text-h3 md:text-h2">Purchases</h1>
 
 			<nav className="grid max-w-lg grid-flow-col gap-6 overflow-y-auto py-2 [scrollbar-width:none]">
 				{salesRoutes.map(route => (

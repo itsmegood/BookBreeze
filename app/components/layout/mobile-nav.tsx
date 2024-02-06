@@ -1,6 +1,6 @@
 import { Link, NavLink } from '@remix-run/react'
 import { Icon } from '../ui/icon.tsx'
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet.tsx'
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '../ui/sheet.tsx'
 
 export function MobileNav({
 	menuItems,
@@ -10,6 +10,7 @@ export function MobileNav({
 		items: {
 			title: string
 			href: string
+			end?: boolean
 		}[]
 	}[]
 }) {
@@ -36,18 +37,19 @@ export function MobileNav({
 										{item.title}
 									</div>
 								)}
-
 								<ul className="flex flex-col gap-1">
 									{item.items.map(subItem => (
 										<li key={subItem.title}>
 											<NavLink
 												to={subItem.href}
 												className={({ isActive }) =>
-													`flex rounded-lg p-1 px-2 hover:bg-border ${isActive ? 'bg-border' : ''}`
+													`flex rounded-lg hover:bg-border ${isActive ? 'bg-border' : ''}`
 												}
-												end
+												end={subItem.end}
 											>
-												{subItem.title}
+												<SheetClose className="flex w-full p-1 px-2">
+													{subItem.title}
+												</SheetClose>
 											</NavLink>
 										</li>
 									))}

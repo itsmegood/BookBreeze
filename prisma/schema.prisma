@@ -235,9 +235,10 @@ model UserCompany {
 
   Role Role[]
 
-  transactions  Transaction[]
-  saleInvoices  SaleInvoice[]
-  purchaseBills PurchaseBill[]
+  transactions Transaction[]
+  saleInvoices SaleInvoice[]
+  // purchaseBills PurchaseBill[]
+  // PurchaseBill PurchaseBill[]
 }
 
 // Account model represents financial ledgers which are used to record transactions
@@ -331,14 +332,14 @@ model PurchaseBill {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  issuedTo   Account @relation(fields: [issuedToId], references: [id]) // Account to which the bill is issued.
-  issuedToId Int
+  issuedBy   Account @relation(fields: [issuedById], references: [id]) // Account to which the bill is issued.
+  issuedById Int
 
   // Optional: Relate to a user who manages the bill
   transactionStatus    TransactionStatus @relation(fields: [transactionStatusKey], references: [key])
   transactionStatusKey String
-  issuedBy             UserCompany?      @relation(fields: [issuedById], references: [id])
-  issuedById           Int?
+  // issuedBy             UserCompany?      @relation(fields: [issuedById], references: [id])
+  // issuedById           Int?
 
   purchaseBillItems PurchaseBillItem[] // Individual items on the bill.
 }

@@ -14,6 +14,7 @@ import {
 } from '../ui/dropdown-menu.tsx'
 import { Icon } from '../ui/icon.tsx'
 import { MobileNav } from './mobile-nav.tsx'
+import { ThemeSwitch } from '../theme-switcher.tsx'
 
 export function HeaderNav({
 	sticky,
@@ -60,7 +61,7 @@ export function HeaderNav({
 			// 		: 'shadow-sm'
 			// }
 			>
-				<nav className="container flex justify-between p-6">
+				<nav className="container flex items-center justify-between p-6">
 					<div className="flex items-center justify-between gap-2 md:w-1/4">
 						{mobileNavItems && <MobileNav menuItems={mobileNavItems} />}
 
@@ -119,18 +120,22 @@ export function HeaderNav({
 						</>
 					)}
 
-					{user ? (
-						<UserDropdown />
-					) : (
-						<Button
-							asChild
-							variant="default"
-							size="sm"
-							className="whitespace-nowrap"
-						>
-							<Link to="/login">Log In</Link>
-						</Button>
-					)}
+					<div className="flex items-center gap-4">
+						<ThemeSwitch />
+
+						{user ? (
+							<UserDropdown />
+						) : (
+							<Button
+								asChild
+								variant="default"
+								size="sm"
+								className="whitespace-nowrap"
+							>
+								<Link to="/login">Log In</Link>
+							</Button>
+						)}
+					</div>
 					{/* <div className="block w-full sm:hidden">{searchBar}</div> */}
 				</nav>
 			</header>

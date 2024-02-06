@@ -3,10 +3,13 @@ import { UserDropdown } from '#app/components/layout/header'
 import { MobileNav } from '#app/components/layout/mobile-nav'
 import { SearchBar } from '#app/components/search-bar'
 import { ThemeSwitch } from '#app/components/theme-switcher'
-import { Button } from '#app/components/ui/button'
-import { Icon } from '#app/components/ui/icon'
 
 const companyRoutes = [
+	{
+		title: 'Dashboard',
+		href: '',
+		end: true,
+	},
 	{
 		title: 'Accounts',
 		href: 'accounts',
@@ -16,8 +19,8 @@ const companyRoutes = [
 		href: 'sales',
 	},
 	{
-		title: 'Purchase',
-		href: 'purchase',
+		title: 'Purchases',
+		href: 'purchases',
 	},
 	{
 		title: 'Reports',
@@ -28,28 +31,7 @@ const companyRoutes = [
 const mobileCompanyRoutes = [
 	{
 		title: 'General',
-		items: [
-			{
-				title: 'Dashboard',
-				href: '',
-			},
-			{
-				title: 'Accounts',
-				href: 'accounts',
-			},
-			{
-				title: 'Sales',
-				href: 'sales',
-			},
-			{
-				title: 'Purchase',
-				href: 'purchase',
-			},
-			{
-				title: 'Reports',
-				href: 'reports',
-			},
-		],
+		items: companyRoutes,
 	},
 ]
 
@@ -57,37 +39,19 @@ export default function LayoutCompany() {
 	return (
 		<div className="relative flex flex-col lg:flex-row">
 			<nav className="top-0 border-r bg-muted/50 p-4 lg:sticky lg:h-screen lg:w-2/12">
-				<div className="flex items-center justify-between">
-					<div className="flex">
+				<div className="flex items-center justify-between py-2">
+					<div className="flex items-center">
 						<MobileNav menuItems={mobileCompanyRoutes} />
 
 						<Link to="/" className="px-2 text-h4 font-semibold text-primary">
 							䷸ Book<span className="text-cyan-400">Breeze</span>
 						</Link>
 					</div>
-					{/* <Link to="search" className="lg:hidden">
-						<Button size="sm">
-							<Icon name="magnifying-glass" size="sm" />
-							<span className="sr-only">Search</span>
-						</Button>
-					</Link> */}
 					<span className="lg:hidden">
 						<UserDropdown />
 					</span>
 				</div>
-				<ul className="my-10 hidden text-lg font-semibold lg:block">
-					<li>
-						<NavLink
-							className={({ isActive }) =>
-								`m-1 flex rounded-lg p-1 px-2 hover:bg-border ${isActive ? 'bg-border' : ''}`
-							}
-							to=""
-							end
-						>
-							Dashboard
-						</NavLink>
-					</li>
-
+				<ul className="mt-10 hidden text-lg font-semibold lg:block">
 					{companyRoutes.map(route => (
 						<li key={route.href}>
 							<NavLink
@@ -95,6 +59,7 @@ export default function LayoutCompany() {
 									`m-1 flex rounded-lg p-1 px-2 hover:bg-border ${isActive ? 'bg-border' : ''}`
 								}
 								to={route.href}
+								end={route.end}
 							>
 								{route.title}
 							</NavLink>
@@ -103,8 +68,8 @@ export default function LayoutCompany() {
 				</ul>
 			</nav>
 
-			<section className="flex flex-col gap-4 p-4 lg:w-10/12">
-				<header className="hidden w-full justify-between gap-4 lg:flex">
+			<div className="flex flex-col gap-2 p-6 md:gap-4 lg:w-10/12">
+				<nav className="hidden w-full justify-between gap-4 lg:flex">
 					{/* {!isProjectPage && ( */}
 					<SearchBar
 						action="/search"
@@ -117,10 +82,10 @@ export default function LayoutCompany() {
 						<ThemeSwitch />
 						<UserDropdown />
 					</div>
-				</header>
+				</nav>
 
 				<Outlet />
-			</section>
+			</div>
 		</div>
 	)
 }
