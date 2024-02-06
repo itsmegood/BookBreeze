@@ -1,54 +1,68 @@
-<div align="center">
-  <h1 align="center"><a href="https://www.epicweb.dev/epic-stack">The Epic Stack 🚀</a></h1>
-  <strong align="center">
-    Ditch analysis paralysis and start shipping Epic Web apps.
-  </strong>
-  <p>
-    This is an opinionated project starter and reference that allows teams to
-    ship their ideas to production faster and on a more stable foundation based
-    on the experience of <a href="https://kentcdodds.com">Kent C. Dodds</a> and
-    <a href="https://github.com/epicweb-dev/epic-stack/graphs/contributors">contributors</a>.
-  </p>
-</div>
+<h1 align="center">䷸ BookBreeze</h1>
+
+Book Breeze is an open-source billing and ERP software tailored for small to medium-sized businesses crafted with the power of Node.js and the efficiency of the Next.js framework. By streamlining the complexities of financial management, inventory control, and customer relations, Book Breeze makes enterprise resource planning accessible and manageable.
+
+## Features
+
+Here are some highlights of what Book Breeze offers:
+
+- **Dynamic Invoicing**: Create and manage invoices with live updates to inventory and accounts.
+- **Expense Tracking**: Monitor and categorize business expenditures with ease.
+- **Real-time Inventory Management**: Automate stock level adjustments and set reorder alerts.
+- **CRM Integration**: Manage your customer information and interactions in one place.
+- **Insightful Reporting**: Access in-depth analytics and custom reports to make informed decisions.
+- **Role-based Authentication**: Control access with specific user roles and permissions.
+
+## Getting Started
+
+### Prerequisites
+
+To run Book Breeze, you'll need the following:
+
+- Node.js (LTS Version)
+- A package manager (only tested with npm)
+
+### Installation
+
+To set up the Book Breeze on your local machine, execute the following steps:
 
 ```sh
-npx create-epic-app@latest
+# Clone the repository
+git clone https://github.com/yourusername/book-breeze.git
+cd book-breeze
+
+# Install dependencies
+npm install
+
+# Set up your environment variables
+cp .env.local.example .env.local
+# Edit .env.local with your database credentials and any other configurations
+
+# Run the development server
+npm run dev
+
+# Open http://localhost:3000 with your browser to see the result. The app should be up and running!
 ```
 
-[![The Epic Stack](https://github-production-user-asset-6210df.s3.amazonaws.com/1500684/246885449-1b00286c-aa3d-44b2-9ef2-04f694eb3592.png)](https://www.epicweb.dev/epic-stack)
+<!-- ## Documentation
 
-[The Epic Stack](https://www.epicweb.dev/epic-stack)
+In-depth documentation covering Book Breeze's features, configuration, and usage instructions can be found in the `docs` folder. -->
 
-<hr />
+÷
+<!-- ## Contributing
 
-## Watch Kent's Introduction to The Epic Stack
+We welcome contributions to Book Breeze! Please read our `CONTRIBUTING.md` file to learn how you can contribute to the project. -->
 
-[![Epic Stack Talk slide showing Flynn Rider with knives, the text "I've been around and I've got opinions" and Kent speaking in the corner](https://github-production-user-asset-6210df.s3.amazonaws.com/1500684/277818553-47158e68-4efc-43ae-a477-9d1670d4217d.png)](https://www.epicweb.dev/talks/the-epic-stack)
+## Acknowledgements
 
-["The Epic Stack" by Kent C. Dodds](https://www.epicweb.dev/talks/the-epic-stack)
+Built on top of <a href="https://www.epicweb.dev/epic-stack">Epic Stack</a> by <a href="https://kentcdodds.com">Kent C. Dodds</a>.
 
-## Docs
+## Contact
 
-[Read the docs](https://github.com/epicweb-dev/epic-stack/blob/main/docs)
-(please 🙏).
+For help and support, please join [discord](https://discord.com/invite/rswhkuujJB). For any additional queries, open an issue in the repository, or if you're looking to collaborate, feel free to reach out!
 
-## Support
+## License
 
-- 🆘 Join the
-  [discussion on GitHub](https://github.com/epicweb-dev/epic-stack/discussions)
-  and the [KCD Community on Discord](https://kcd.im/discord).
-- 💡 Create an
-  [idea discussion](https://github.com/epicweb-dev/epic-stack/discussions/new?category=ideas)
-  for suggestions.
-- 🐛 Open a [GitHub issue](https://github.com/epicweb-dev/epic-stack/issues) to
-  report a bug.
+Book Breeze is released under the [MIT License](LICENSE).
 
-## Branding
 
-Want to talk about the Epic Stack in a blog post or talk? Great! Here are some
-assets you can use in your material:
-[EpicWeb.dev/brand](https://epicweb.dev/brand)
-
-## Thanks
-
-You rock 🪨
