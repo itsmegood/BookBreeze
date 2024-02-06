@@ -1,3 +1,5 @@
+`WIP! not ready for production. Thankyou for your patience` 
+
 <h1 align="center">䷸ BookBreeze</h1>
 
 Book Breeze is an open-source billing and ERP software tailored for small to medium-sized businesses crafted with Remix Run. By streamlining the complexities of financial management, inventory control, and customer relations, Book Breeze makes enterprise resource planning accessible and manageable.
