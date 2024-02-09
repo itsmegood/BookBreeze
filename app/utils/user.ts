@@ -25,7 +25,14 @@ export function useUser() {
 }
 
 type Action = 'create' | 'read' | 'update' | 'delete'
-type Entity = 'user' | 'note' | 'company'
+type Entity =
+	| 'user'
+	| 'note'
+	| 'company'
+	| 'company-sale'
+	| 'company-purchase'
+	| 'company-account'
+	| 'company-report'
 type Access = 'own' | 'any' | 'own,any' | 'any,own'
 export type PermissionString =
 	| `${Action}:${Entity}`

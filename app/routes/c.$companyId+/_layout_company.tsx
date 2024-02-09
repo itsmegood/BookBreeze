@@ -11,8 +11,8 @@ const companyRoutes = [
 		end: true,
 	},
 	{
-		title: 'Accounts',
-		href: 'accounts',
+		title: 'Customers',
+		href: 'customers',
 	},
 	{
 		title: 'Sales',

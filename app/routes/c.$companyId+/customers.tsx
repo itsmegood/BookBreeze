@@ -15,8 +15,8 @@ const salesRoutes = [
 		href: 'customers',
 	},
 	{
-		title: 'Quotes',
-		href: 'quotes',
+		title: 'New Account',
+		href: 'new',
 	},
 	{
 		title: 'Payments',
@@ -24,17 +24,17 @@ const salesRoutes = [
 	},
 ]
 
-export default function AccountsLayout() {
+export default function CustomerAccountsLayout() {
 	return (
 		<>
-			<h1 className="text-h3 md:text-h2">Accounts</h1>
+			<h1 className="text-h3 md:text-h2">Customer Accounts</h1>
 
-			<nav className="grid max-w-lg grid-flow-col gap-6 overflow-y-auto py-2 [scrollbar-width:none]">
+			<nav className="grid max-w-lg grid-flow-col gap-6 overflow-y-auto text-nowrap py-2 font-semibold [scrollbar-width:none]">
 				{salesRoutes.map(route => (
 					<NavLink
 						key={route.title}
 						className={({ isActive }) =>
-							`font-semibold hover:underline ${isActive ? 'underline' : 'text-foreground/50'}`
+							`hover:underline ${isActive ? 'underline' : 'text-foreground/50'}`
 						}
 						to={route.href}
 						end={route.end}

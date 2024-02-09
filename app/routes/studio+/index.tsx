@@ -23,7 +23,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 							name: true,
 						},
 					},
-					Role: {
+					roles: {
 						select: {
 							name: true,
 							permissions: true,

@@ -24,7 +24,15 @@ async function seed() {
 	console.time('🔑 Created permissions...')
 
 	// ! Maybe add transactions, sales, purchase, etc. entities
-	const entities = ['user', 'note', 'company']
+	const entities = [
+		'user',
+		'note',
+		'company',
+		'company-sale',
+		'company-purchase',
+		'company-account',
+		'company-report',
+	]
 	const actions = ['create', 'read', 'update', 'delete']
 	const accesses = ['own', 'any'] as const
 	for (const entity of entities) {

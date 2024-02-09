@@ -22,12 +22,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 			PurchaseBill: {
 				select: {
 					id: true,
-					issuedBy: {
+					paidToAccount: {
 						select: {
 							name: true,
 						},
 					},
-					issuedById: true,
+					paidToAccountId: true,
 					totalAmount: true,
 				},
 			},
@@ -44,8 +44,13 @@ export default function CompanyPurchasesOverview() {
 
 	return (
 		<div>
-			<h1>Overview Route</h1>
-			{/* <div>{data.company.PurchaseBill.map()}</div> */}
+			<ul>
+				{data.company.PurchaseBill.map(bill => (
+					<li key={bill.id} className="flex w-full">
+						<div>{bill.paidToAccount.name}</div>
+					</li>
+				))}
+			</ul>
 		</div>
 	)
 }

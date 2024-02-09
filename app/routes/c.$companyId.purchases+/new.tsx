@@ -19,10 +19,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 			platformStatusKey: PLATFORM_STATUS.ACTIVE.KEY,
 		},
 		select: {
-			accounts: {
+			PurchaseBill: {
 				select: {
 					id: true,
-					name: true,
+					paidToAccount: {
+						select: {
+							name: true,
+						},
+					},
+					paidToAccountId: true,
+					totalAmount: true,
 				},
 			},
 		},
@@ -33,13 +39,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 	return json({ company })
 }
 
-export default function CompanyAccountsOverview() {
+export default function CompanyPurchasesNew() {
 	const data = useLoaderData<typeof loader>()
 
 	return (
 		<div>
 			<h1>Overview Route</h1>
-			{/* <div>{data.company.PurchaseBill.map()}</div> */}
 		</div>
 	)
 }
