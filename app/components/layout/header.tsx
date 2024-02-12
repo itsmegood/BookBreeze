@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { getUserImgSrc } from '#app/utils/misc.tsx'
 import { useOptionalUser, useUser } from '#app/utils/user.ts'
 import { SearchBar } from '../search-bar.tsx'
+import { ThemeSwitch } from '../theme-switcher.tsx'
 import { Button } from '../ui/button.tsx'
 import {
 	DropdownMenu,
@@ -14,7 +15,6 @@ import {
 } from '../ui/dropdown-menu.tsx'
 import { Icon } from '../ui/icon.tsx'
 import { MobileNav } from './mobile-nav.tsx'
-import { ThemeSwitch } from '../theme-switcher.tsx'
 
 export function HeaderNav({
 	sticky,

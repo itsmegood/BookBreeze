@@ -19,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 			platformStatusKey: PLATFORM_STATUS.ACTIVE.KEY,
 		},
 		select: {
-			PurchaseBill: {
+			purchaseBills: {
 				select: {
 					id: true,
 					paidToAccount: {
@@ -45,7 +45,7 @@ export default function CompanyPurchasesOverview() {
 	return (
 		<div>
 			<ul>
-				{data.company.PurchaseBill.map(bill => (
+				{data.company.purchaseBills.map(bill => (
 					<li key={bill.id} className="flex w-full">
 						<div>{bill.paidToAccount.name}</div>
 					</li>

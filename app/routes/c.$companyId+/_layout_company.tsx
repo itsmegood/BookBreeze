@@ -11,8 +11,8 @@ const companyRoutes = [
 		end: true,
 	},
 	{
-		title: 'Customers',
-		href: 'customers',
+		title: 'Accounts',
+		href: 'accounts',
 	},
 	{
 		title: 'Sales',
@@ -43,10 +43,14 @@ export default function LayoutCompany() {
 					<div className="flex items-center">
 						<MobileNav menuItems={mobileCompanyRoutes} />
 
-						<Link to="/" className="px-2 text-h4 font-semibold text-primary">
-							䷸ Book<span className="text-cyan-400">Breeze</span>
+						<Link
+							to="/studio"
+							className="px-2 text-h4 font-semibold text-primary"
+						>
+							Book<span className="text-cyan-400">Breeze</span>
 						</Link>
 					</div>
+
 					<span className="lg:hidden">
 						<UserDropdown />
 					</span>

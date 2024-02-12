@@ -1,6 +1,6 @@
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
-import { type CustomerAccount } from '@prisma/client'
+import { type Account } from '@prisma/client'
 import {
 	json,
 	type ActionFunctionArgs,
@@ -51,7 +51,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 		schema: CompanyAccountsNewSchema.superRefine(async (data, ctx) => {
 			const checkName = await prisma.company.findFirst({
 				where: {
-					customers: {
+					accounts: {
 						some: {
 							name: data.name,
 						},
@@ -78,7 +78,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 	}
 
 	const {
-		id: customerAccountId,
+		id: accountId,
 		name,
 		uniqueId,
 		email,
@@ -90,9 +90,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
 		zip,
 	} = submission.value
 
-	await prisma.customerAccount.upsert({
+	await prisma.account.upsert({
 		where: {
-			id: customerAccountId ?? '__new_customer__',
+			id: accountId ?? '__new_account__',
 		},
 		create: {
 			name,
@@ -123,12 +123,12 @@ export async function action({ request, params }: ActionFunctionArgs) {
 	return redirect(`/c/${params.companyId}/customers`)
 }
 
-export function CustomerAccountEditor({
-	customerAccount,
+export function AccountEditor({
+	account,
 }: {
-	customerAccount?: SerializeFrom<
+	account?: SerializeFrom<
 		Pick<
-			CustomerAccount,
+			Account,
 			| 'id'
 			| 'name'
 			| 'uniqueId'
@@ -146,122 +146,100 @@ export function CustomerAccountEditor({
 	const isPending = useIsPending()
 
 	const [form, fields] = useForm({
-		id: 'company-accounts-new-form',
+		id: 'company-accounts-editor-form',
 		constraint: getZodConstraint(CompanyAccountsNewSchema),
 		lastResult: actionData?.result,
 		onValidate({ formData }) {
 			return parseWithZod(formData, { schema: CompanyAccountsNewSchema })
 		},
 		defaultValue: {
-			...customerAccount,
+			...account,
 		},
 		shouldRevalidate: 'onBlur',
 	})
 
 	return (
-		<>
-			<div className="flex items-center">
-				<p className="text-lg font-bold">Customer Account Editor</p>
-				<div className="ml-2 cursor-pointer">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 24 24"
-						width={16}
-						height={16}
-					>
-						<path
-							className="heroicon-ui"
-							d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-9a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0v-4a1 1 0 0 1 1-1zm0-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
-							fill="currentColor"
-						/>
-					</svg>
+		<Form method="POST" {...getFormProps(form)}>
+			<button type="submit" className="hidden" />
+			{account ? <input type="hidden" name="id" value={account.id} /> : null}
+
+			<div className="grid gap-x-6 sm:grid-cols-6">
+				<div className="sm:col-span-3">
+					<Field
+						labelProps={{ children: 'Full Name *' }}
+						inputProps={{
+							...getInputProps(fields.name, { type: 'text' }),
+							autoFocus: true,
+						}}
+						errors={fields.name.errors}
+					/>
 				</div>
+
+				<div className="sm:col-span-3">
+					<Field
+						labelProps={{ children: 'Unique ID' }}
+						inputProps={getInputProps(fields.uniqueId, { type: 'text' })}
+						errors={fields.uniqueId.errors}
+					/>
+				</div>
+
+				<div className="sm:col-span-4">
+					<Field
+						labelProps={{ children: 'Email' }}
+						inputProps={getInputProps(fields.email, { type: 'email' })}
+						errors={fields.email.errors}
+					/>
+				</div>
+
+				<div className="sm:col-span-3">
+					<Field
+						labelProps={{ children: 'Phone' }}
+						inputProps={getInputProps(fields.phone, { type: 'tel' })}
+						errors={fields.phone.errors}
+					/>
+				</div>
+
+				<div className="col-span-full">
+					<Field
+						labelProps={{ children: 'Address' }}
+						inputProps={getInputProps(fields.address, { type: 'text' })}
+						errors={fields.address.errors}
+					/>
+				</div>
+
+				<div className="sm:col-span-2 sm:col-start-1">
+					<Field
+						labelProps={{ children: 'City' }}
+						inputProps={getInputProps(fields.city, { type: 'text' })}
+						errors={fields.city.errors}
+					/>
+				</div>
+
+				<div className="sm:col-span-2">
+					<Field
+						labelProps={{ children: 'State' }}
+						inputProps={getInputProps(fields.state, { type: 'text' })}
+						errors={fields.state.errors}
+					/>
+				</div>
+
+				<div className="sm:col-span-2">
+					<Field
+						labelProps={{ children: 'Country' }}
+						inputProps={getInputProps(fields.country, { type: 'text' })}
+						errors={fields.country.errors}
+					/>
+				</div>
+				<StatusButton
+					form={form.id}
+					type="submit"
+					disabled={isPending}
+					status={isPending ? 'pending' : 'idle'}
+					className="sticky bottom-4 sm:col-span-2"
+				>
+					Submit
+				</StatusButton>
 			</div>
-
-			<Form method="POST" {...getFormProps(form)}>
-				<button type="submit" className="hidden" />
-				{customerAccount ? (
-					<input type="hidden" name="id" value={customerAccount.id} />
-				) : null}
-
-				<div className="grid gap-x-6 sm:grid-cols-6">
-					<div className="sm:col-span-3">
-						<Field
-							labelProps={{ children: 'Full Name *' }}
-							inputProps={{
-								...getInputProps(fields.name, { type: 'text' }),
-								autoFocus: true,
-							}}
-							errors={fields.name.errors}
-						/>
-					</div>
-
-					<div className="sm:col-span-3">
-						<Field
-							labelProps={{ children: 'Unique ID' }}
-							inputProps={getInputProps(fields.uniqueId, { type: 'text' })}
-							errors={fields.uniqueId.errors}
-						/>
-					</div>
-
-					<div className="sm:col-span-4">
-						<Field
-							labelProps={{ children: 'Email' }}
-							inputProps={getInputProps(fields.email, { type: 'email' })}
-							errors={fields.email.errors}
-						/>
-					</div>
-
-					<div className="sm:col-span-3">
-						<Field
-							labelProps={{ children: 'Phone' }}
-							inputProps={getInputProps(fields.phone, { type: 'tel' })}
-							errors={fields.phone.errors}
-						/>
-					</div>
-
-					<div className="col-span-full">
-						<Field
-							labelProps={{ children: 'Address' }}
-							inputProps={getInputProps(fields.address, { type: 'text' })}
-							errors={fields.address.errors}
-						/>
-					</div>
-
-					<div className="sm:col-span-2 sm:col-start-1">
-						<Field
-							labelProps={{ children: 'City' }}
-							inputProps={getInputProps(fields.city, { type: 'text' })}
-							errors={fields.city.errors}
-						/>
-					</div>
-
-					<div className="sm:col-span-2">
-						<Field
-							labelProps={{ children: 'State' }}
-							inputProps={getInputProps(fields.state, { type: 'text' })}
-							errors={fields.state.errors}
-						/>
-					</div>
-
-					<div className="sm:col-span-2">
-						<Field
-							labelProps={{ children: 'Country' }}
-							inputProps={getInputProps(fields.country, { type: 'text' })}
-							errors={fields.country.errors}
-						/>
-					</div>
-					<StatusButton
-						form={form.id}
-						type="submit"
-						disabled={isPending}
-						status={isPending ? 'pending' : 'idle'}
-						className="sticky bottom-4 sm:col-span-2"
-					>
-						Submit
-					</StatusButton>
-				</div>
-			</Form>
-		</>
+		</Form>
 	)
 }

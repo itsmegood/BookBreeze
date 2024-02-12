@@ -4,7 +4,7 @@ import { useLoaderData } from '@remix-run/react'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { prisma } from '#app/utils/db.server.ts'
 import { requireCompanyUserWithRBAC } from '#app/utils/permissions.server.ts'
-import { CustomerAccountEditor, action } from './__customer-account-editor.tsx'
+import { AccountEditor, action } from './__account-editor.js'
 
 export { action }
 
@@ -15,7 +15,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 		permission: 'create:company-account',
 	})
 
-	const customerAccount = await prisma.customerAccount.findFirst({
+	const account = await prisma.account.findFirst({
 		where: {
 			id: params.customerId!,
 			companyId: params.companyId,
@@ -34,15 +34,15 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 		},
 	})
 
-	invariantResponse(customerAccount, 'Not found', { status: 404 })
+	invariantResponse(account, 'Not found', { status: 404 })
 
-	return json({ customerAccount: customerAccount })
+	return json({ account: account })
 }
 
 export default function CompanyAccountsEdit() {
 	const data = useLoaderData<typeof loader>()
 
-	return <CustomerAccountEditor customerAccount={data.customerAccount} />
+	return <AccountEditor account={data.account} />
 }
 
 export function ErrorBoundary() {

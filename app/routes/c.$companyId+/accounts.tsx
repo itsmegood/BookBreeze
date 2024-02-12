@@ -15,19 +15,25 @@ const salesRoutes = [
 		href: 'customers',
 	},
 	{
-		title: 'Quotes',
-		href: 'quotes',
+		title: 'New Account',
+		href: 'new',
 	},
 	{
-		title: 'New Sale',
-		href: 'new',
+		title: 'Payments',
+		href: 'payments',
 	},
 ]
 
-export default function SalesLayout() {
+export default function CustomerAccountsLayout() {
 	return (
 		<>
-			<h1 className="text-h3 md:text-h2">Sales</h1>
+			{/* <div className="flex items-center justify-between"> */}
+			<h2 className="text-h3 md:text-h2">Accounts</h2>
+			{/* <Link to="new">
+					<Button>Add Account</Button>
+					</Link>
+				</div> */}
+
 			<div className="sticky top-0 bg-background">
 				<nav className="grid grid-flow-col gap-4 overflow-x-auto whitespace-nowrap py-4 text-lg font-semibold [scrollbar-width:none] md:w-fit">
 					{salesRoutes.map(route => (

@@ -1,6 +1,6 @@
 import { type LoaderFunctionArgs } from '@remix-run/node'
 import { requireCompanyUserWithRBAC } from '#app/utils/permissions.server'
-import { CustomerAccountEditor, action } from './__customer-account-editor'
+import { AccountEditor, action } from './__account-editor'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	await requireCompanyUserWithRBAC({
@@ -13,4 +13,4 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export { action }
-export default CustomerAccountEditor
+export default AccountEditor

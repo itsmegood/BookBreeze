@@ -29,22 +29,23 @@ export default function PurchasesLayout() {
 		<>
 			<h1 className="text-h3 md:text-h2">Purchases</h1>
 
-			<nav className="grid max-w-lg grid-flow-col gap-6 overflow-y-auto text-nowrap py-2 font-semibold  [scrollbar-width:none]">
-				{salesRoutes.map(route => (
-					<NavLink
-						key={route.title}
-						className={({ isActive }) =>
-							`hover:underline ${isActive ? 'underline' : 'text-foreground/50'}`
-						}
-						to={route.href}
-						end={route.end}
-					>
-						{route.title}
-					</NavLink>
-				))}
-			</nav>
-
-			<hr />
+			<div className="sticky top-0 bg-background">
+				<nav className="grid grid-flow-col gap-4 overflow-x-auto whitespace-nowrap py-4 text-lg font-semibold [scrollbar-width:none] md:w-fit">
+					{salesRoutes.map(route => (
+						<NavLink
+							key={route.title}
+							className={({ isActive }) =>
+								`px-2 py-1 hover:underline ${isActive ? 'rounded-md bg-cyan-400 text-background' : 'text-foreground/45'}`
+							}
+							to={route.href}
+							end={route.end}
+						>
+							{route.title}
+						</NavLink>
+					))}
+				</nav>
+				<hr />
+			</div>
 
 			<section className="space-y-6">
 				<Outlet />
