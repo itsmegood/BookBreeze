@@ -3,11 +3,11 @@ import { type LoaderFunctionArgs, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { requireUserId } from '#app/utils/auth.server'
 import { PLATFORM_STATUS } from '#app/utils/constants/platform-status'
+import { TRANSACTION_STATUS } from '#app/utils/constants/transaction-status'
 import { prisma } from '#app/utils/db.server'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	const userId = await requireUserId(request)
-
 	const company = await prisma.company.findUnique({
 		where: {
 			id: params.companyId,
@@ -19,6 +19,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 			platformStatusKey: PLATFORM_STATUS.ACTIVE.KEY,
 		},
 		select: {
+			id: true,
+			invoiceCount: true,
 			saleInvoices: {
 				select: {
 					id: true,
@@ -31,10 +33,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 					totalAmount: true,
 				},
 			},
+			accounts: {
+				select: {
+					id: true,
+					name: true,
+				},
+			},
 		},
 	})
-
 	invariantResponse(company, 'Not found', { status: 404 })
+	// return json({ company })
 
 	return json({ company })
 }
@@ -45,7 +53,13 @@ export default function CompanySalesOverview() {
 	return (
 		<div className="">
 			<h1>Overview Route</h1>
-			{/* <div>{data.company}</div> */}
+			<div>
+				{data.company.saleInvoices.map(invoice => (
+					<div key={invoice.id}>
+						{invoice.id} - {invoice.issuedTo.name} - {invoice.totalAmount}
+					</div>
+				))}
+			</div>
 		</div>
 	)
 }

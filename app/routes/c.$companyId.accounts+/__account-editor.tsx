@@ -17,7 +17,7 @@ import { requireCompanyUserWithRBAC } from '#app/utils/permissions.server'
 // TODO: Make a better component to handle country, state, and city inputs
 // ? Maybe a select component with api data
 
-const CompanyAccountsNewSchema = z.object({
+const CompanyAccountsEditorSchema = z.object({
 	id: z.string().optional(),
 	name: z.string().min(3).max(40),
 	uniqueId: z.string().min(4).max(24).optional(),
@@ -48,7 +48,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 	const formData = await request.formData()
 
 	const submission = await parseWithZod(formData, {
-		schema: CompanyAccountsNewSchema.superRefine(async (data, ctx) => {
+		schema: CompanyAccountsEditorSchema.superRefine(async (data, ctx) => {
 			const checkName = await prisma.company.findFirst({
 				where: {
 					accounts: {
@@ -147,10 +147,10 @@ export function AccountEditor({
 
 	const [form, fields] = useForm({
 		id: 'company-accounts-editor-form',
-		constraint: getZodConstraint(CompanyAccountsNewSchema),
+		constraint: getZodConstraint(CompanyAccountsEditorSchema),
 		lastResult: actionData?.result,
 		onValidate({ formData }) {
-			return parseWithZod(formData, { schema: CompanyAccountsNewSchema })
+			return parseWithZod(formData, { schema: CompanyAccountsEditorSchema })
 		},
 		defaultValue: {
 			...account,

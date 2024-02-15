@@ -1,6 +1,6 @@
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
-import { Account, type SaleInvoice } from '@prisma/client'
+import { type Account, type SaleInvoice } from '@prisma/client'
 import {
 	json,
 	type ActionFunctionArgs,
@@ -17,25 +17,23 @@ import { requireCompanyUserWithRBAC } from '#app/utils/permissions.server'
 // TODO: Make a better component to handle country, state, and city inputs
 // ? Maybe a select component with api data
 
-const CompanyAccountsNewSchema = z.object({
+const CompanySaleEditorSchema = z.object({
 	id: z.string().optional(),
 	invoiceNumber: z.string().min(4).max(24).optional(),
 	dueDate: z.string().min(3).max(40),
 	dateIssued: z.string().email().optional(),
 	issuedToId: z.string().min(7).max(15).optional(),
-	address: z.string().min(4).max(40).optional(),
-	country: z.string().min(4).max(24).optional(),
-	city: z.string().min(4).max(24).optional(),
-	state: z.string().min(4).max(24).optional(),
-	zip: z.string().min(4).max(12).optional(),
-	// description: z.string().min(4).max(80).optional(),
+	issuedById: z.string().min(4).max(40).optional(),
+	totalAmount: z.string().min(4).max(24).optional(),
+	transactionStatusKey: z.string().min(4).max(24).optional(),
+	description: z.string().min(4).max(80).optional(),
 })
 
 export async function action({ request, params }: ActionFunctionArgs) {
 	const user = await requireCompanyUserWithRBAC({
 		request,
 		companyId: params.companyId!,
-		permission: 'create:company-account',
+		permission: 'create:company-sale',
 		select: {
 			userCompanies: {
 				select: {
@@ -48,7 +46,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 	const formData = await request.formData()
 
 	const submission = await parseWithZod(formData, {
-		schema: CompanyAccountsNewSchema.superRefine(async (data, ctx) => {
+		schema: CompanySaleEditorSchema.superRefine(async (data, ctx) => {
 			const checkName = await prisma.company.findFirst({
 				where: {
 					accounts: {
@@ -139,9 +137,8 @@ export function SaleEditor({
 			| 'createdAt'
 			| 'updatedAt'
 			| 'transactionStatusKey'
-		> & {
-			issuedTo: Pick<Account, 'name' | 'uniqueId'>
-		}
+			| 'description'
+		> & { issuedTo: Pick<Account, 'name' | 'uniqueId'> }
 	>
 }) {
 	const actionData = useActionData<typeof action>()
@@ -149,10 +146,10 @@ export function SaleEditor({
 
 	const [form, fields] = useForm({
 		id: 'company-sale-editor-form',
-		constraint: getZodConstraint(CompanyAccountsNewSchema),
+		constraint: getZodConstraint(CompanySaleEditorSchema),
 		lastResult: actionData?.result,
 		onValidate({ formData }) {
-			return parseWithZod(formData, { schema: CompanyAccountsNewSchema })
+			return parseWithZod(formData, { schema: CompanySaleEditorSchema })
 		},
 		defaultValue: {
 			...sale,
