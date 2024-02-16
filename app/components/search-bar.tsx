@@ -12,20 +12,20 @@ export function SearchBar({
 	autoFocusSearch = false,
 	autoSubmit = false,
 	onSubmitHandler,
-	searchRef,
 	className,
+	searchParam,
 }: {
 	action: string
 	status: 'idle' | 'pending' | 'success' | 'error'
 	autoFocusSearch?: boolean
 	onSubmitHandler?: (e: React.FormEvent<HTMLFormElement>) => void
 	autoSubmit?: boolean
-	searchRef?: React.RefObject<HTMLInputElement>
 	className?: string
+	searchParam?: string
 }) {
 	const id = useId()
 	const [searchParams] = useSearchParams()
-	let defaultValue = searchParams.get('search') || ''
+	let defaultValue = searchParams.get(searchParam ?? 'search') || ''
 
 	const submit = useSubmit()
 	const isSubmitting = useIsPending({
@@ -53,14 +53,13 @@ export function SearchBar({
 					Search
 				</Label>
 				<Input
-					ref={searchRef}
 					type="search"
-					name="search"
+					name={searchParam ?? 'search'}
 					id={id}
 					defaultValue={defaultValue}
 					placeholder="Search"
 					className="h-full w-full"
-					// autoFocus={autoFocusSearch}
+					autoFocus={autoFocusSearch}
 				/>
 			</div>
 			<StatusButton

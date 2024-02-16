@@ -3,7 +3,6 @@ import { type LoaderFunctionArgs, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { requireUserId } from '#app/utils/auth.server'
 import { PLATFORM_STATUS } from '#app/utils/constants/platform-status'
-import { TRANSACTION_STATUS } from '#app/utils/constants/transaction-status'
 import { prisma } from '#app/utils/db.server'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {

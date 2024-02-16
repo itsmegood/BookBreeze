@@ -1,16 +1,32 @@
-import { type LoaderFunctionArgs } from '@remix-run/node'
+import { json, type LoaderFunctionArgs } from '@remix-run/node'
+import { SearchBar } from '#app/components/search-bar'
 import { requireCompanyUserWithRBAC } from '#app/utils/permissions.server'
-import { SaleEditor, action } from './__sale-editor'
+import { useLoaderData } from '@remix-run/react'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	await requireCompanyUserWithRBAC({
 		request,
 		companyId: params.companyId!,
-		permission: 'create:company-account',
+		permission: 'create:company-sale',
 	})
 
-	return null
+	return json({ companyId: params.companyId })
 }
 
-export { action }
-export default SaleEditor
+export default function NewSale() {
+	const data = useLoaderData<typeof loader>()
+
+	return (
+		<div>
+			<SearchBar
+				searchParam="accQ"
+				status="idle"
+				action={`/c/${data.companyId}/sales+`}
+				autoSubmit
+				autoFocusSearch
+			/>
+
+			<h1>Unknown Route</h1>
+		</div>
+	)
+}

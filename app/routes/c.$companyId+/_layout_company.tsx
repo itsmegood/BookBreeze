@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet } from '@remix-run/react'
+import { Link, NavLink, Outlet, useMatches } from '@remix-run/react'
 import { UserDropdown } from '#app/components/layout/header'
 import { MobileNav } from '#app/components/layout/mobile-nav'
 import { SearchBar } from '#app/components/search-bar'
@@ -26,6 +26,10 @@ const companyRoutes = [
 		title: 'Reports',
 		href: 'reports',
 	},
+	{
+		title: 'Search',
+		href: 'search',
+	},
 ]
 
 const mobileCompanyRoutes = [
@@ -36,6 +40,10 @@ const mobileCompanyRoutes = [
 ]
 
 export default function LayoutCompany() {
+	const matches = useMatches()
+	console.log(matches)
+	const isSearchPage = matches.find(m => m.id === 'routes/c.$companyId+/search')
+
 	return (
 		<div className="relative flex flex-col lg:flex-row">
 			<nav className="top-0 border-r bg-muted/50 p-4 lg:sticky lg:h-screen lg:w-2/12">
@@ -73,16 +81,16 @@ export default function LayoutCompany() {
 			</nav>
 
 			<div className="flex flex-col gap-2 p-6 md:gap-4 lg:w-10/12">
-				<nav className="hidden w-full justify-between gap-4 lg:flex">
-					{/* {!isProjectPage && ( */}
-					<SearchBar
-						action="/search"
-						status="idle"
-						className="hidden max-w-lg lg:flex"
-					/>
-					{/* )} */}
+				<nav className="hidden w-full gap-4 lg:flex">
+					{!isSearchPage && (
+						<SearchBar
+							action="/search"
+							status="idle"
+							className="hidden max-w-lg lg:flex"
+						/>
+					)}
 
-					<div className="flex gap-4">
+					<div className="flex flex-grow justify-end gap-4">
 						<ThemeSwitch />
 						<UserDropdown />
 					</div>

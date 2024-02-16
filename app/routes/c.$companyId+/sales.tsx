@@ -20,7 +20,7 @@ const salesRoutes = [
 	},
 	{
 		title: 'New Sale',
-		href: 'new',
+		href: '../search',
 	},
 ]
 
