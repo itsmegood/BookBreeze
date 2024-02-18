@@ -14,6 +14,7 @@ export function SearchBar({
 	onSubmitHandler,
 	className,
 	searchParam,
+	searchRef,
 }: {
 	action: string
 	status: 'idle' | 'pending' | 'success' | 'error'
@@ -22,6 +23,7 @@ export function SearchBar({
 	autoSubmit?: boolean
 	className?: string
 	searchParam?: string
+	searchRef?: React.RefObject<HTMLInputElement>
 }) {
 	const id = useId()
 	const [searchParams] = useSearchParams()
@@ -38,38 +40,38 @@ export function SearchBar({
 	}, 400)
 
 	return (
-		<Form
-			method="GET"
-			action={action}
-			className={cn(
-				'flex w-full flex-wrap items-center justify-center gap-2',
-				className,
-			)}
-			onChange={e => autoSubmit && handleFormChange(e.currentTarget)}
-			onSubmit={onSubmitHandler}
-		>
-			<div className="flex-1" key={defaultValue}>
-				<Label htmlFor={id} className="sr-only">
-					Search
-				</Label>
-				<Input
-					type="search"
-					name={searchParam ?? 'search'}
-					id={id}
-					defaultValue={defaultValue}
-					placeholder="Search"
-					className="h-full w-full"
-					autoFocus={autoFocusSearch}
-				/>
-			</div>
+		<div className="flex gap-4">
+			<Form
+				method="GET"
+				action={action}
+				className={cn('w-full', className)}
+				onChange={e => autoSubmit && handleFormChange(e.currentTarget)}
+				onSubmit={onSubmitHandler}
+			>
+				<div key={defaultValue}>
+					<Label htmlFor={id} className="sr-only">
+						Search
+					</Label>
+					<Input
+						ref={searchRef}
+						type="search"
+						name={searchParam ?? 'search'}
+						id={id}
+						defaultValue={defaultValue}
+						placeholder="Search"
+						autoFocus={autoFocusSearch}
+					/>
+				</div>
+			</Form>
 			<StatusButton
+				tabIndex={autoSubmit ? -1 : 0}
 				type="submit"
 				status={isSubmitting ? 'pending' : status}
-				size="sm"
 			>
-				<Icon name="magnifying-glass" size="sm" />
-				<span className="sr-only">Search</span>
+				<Icon name="magnifying-glass">
+					<span className="hidden md:flex">Search</span>
+				</Icon>
 			</StatusButton>
-		</Form>
+		</div>
 	)
 }

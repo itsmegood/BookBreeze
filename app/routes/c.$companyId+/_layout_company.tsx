@@ -27,7 +27,7 @@ const companyRoutes = [
 		href: 'reports',
 	},
 	{
-		title: 'Search',
+		title: 'Discover',
 		href: 'search',
 	},
 ]
@@ -41,7 +41,6 @@ const mobileCompanyRoutes = [
 
 export default function LayoutCompany() {
 	const matches = useMatches()
-	console.log(matches)
 	const isSearchPage = matches.find(m => m.id === 'routes/c.$companyId+/search')
 
 	return (
@@ -84,7 +83,7 @@ export default function LayoutCompany() {
 				<nav className="hidden w-full gap-4 lg:flex">
 					{!isSearchPage && (
 						<SearchBar
-							action="/search"
+							action="search"
 							status="idle"
 							className="hidden max-w-lg lg:flex"
 						/>

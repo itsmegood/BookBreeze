@@ -5,7 +5,7 @@
 // ensure the user gets the right status code and we can display a nicer error
 // message for them than the Remix and/or browser default.
 
-import { Link, useLocation } from '@remix-run/react'
+import { Link, useLocation, useNavigate } from '@remix-run/react'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { Icon } from '#app/components/ui/icon.tsx'
 
@@ -21,6 +21,9 @@ export default function NotFound() {
 
 export function ErrorBoundary() {
 	const location = useLocation()
+
+	const navigate = useNavigate()
+
 	return (
 		<GeneralErrorBoundary
 			statusHandlers={{
@@ -35,6 +38,12 @@ export function ErrorBoundary() {
 						<Link to="/" className="text-body-md underline">
 							<Icon name="arrow-left">Back to home</Icon>
 						</Link>
+						<button
+							onClick={() => navigate(-1)}
+							className="text-body-md underline"
+						>
+							<Icon name="arrow-left">Go back</Icon>
+						</button>
 					</div>
 				),
 			}}
