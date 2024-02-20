@@ -44,11 +44,11 @@ export function SearchBar({
 			<Form
 				method="GET"
 				action={action}
-				className={cn('w-full', className)}
+				className={cn('w-full sm:min-w-[368px]', className)}
 				onChange={e => autoSubmit && handleFormChange(e.currentTarget)}
 				onSubmit={onSubmitHandler}
 			>
-				<div key={defaultValue}>
+				<div key={defaultValue} className="w-full">
 					<Label htmlFor={id} className="sr-only">
 						Search
 					</Label>

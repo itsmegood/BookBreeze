@@ -35,7 +35,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 	return json({ company })
 }
 
-export default function CompanyCustomerAccountsOverview() {
+export default function CompanyAccountsCustomer() {
 	const data = useLoaderData<typeof loader>()
 
 	return (
@@ -70,7 +70,7 @@ export default function CompanyCustomerAccountsOverview() {
 								{customer.uniqueId ?? '-'}
 							</td>
 							<td className="py-4 pl-3 pr-4 text-right font-medium sm:pr-0">
-								<Link to={`cust/${customer.id}`}>
+								<Link to={`${customer.id}`}>
 									<Button variant="link">View</Button>
 								</Link>
 							</td>

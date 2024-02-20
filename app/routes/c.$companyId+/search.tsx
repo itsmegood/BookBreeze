@@ -1,5 +1,5 @@
 import { type LoaderFunctionArgs, json } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData, useParams } from '@remix-run/react'
 import { SearchBar } from '#app/components/search-bar'
 import { Button } from '#app/components/ui/button'
 import {
@@ -9,6 +9,12 @@ import {
 	DropdownMenuTrigger,
 } from '#app/components/ui/dropdown-menu'
 import { Icon, type IconName } from '#app/components/ui/icon'
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from '#app/components/ui/tooltip'
 import { prisma } from '#app/utils/db.server'
 import { requireCompanyUserWithRBAC } from '#app/utils/permissions.server'
 
@@ -51,10 +57,22 @@ let purchaseBills: {
 }[] = []
 
 const searchKeywords = {
-	Account: 'acc',
-	Account_UID: 'uid',
-	Invoice: 'inv',
-	Bill: 'bill',
+	Account: {
+		key: 'acc',
+		info: 'Search for accounts using names',
+	},
+	Account_UID: {
+		key: 'uid',
+		info: 'Search for accounts by unique ID',
+	},
+	Invoice: {
+		key: 'inv',
+		info: 'Search for invoices using invoice number',
+	},
+	Bill: {
+		key: 'bill',
+		info: 'Search for bills via bill number',
+	},
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -73,7 +91,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 	})
 
 	const url = new URL(request.url)
-	const searchTerm = String(url.searchParams.get('search'))
+	// ? q stands for query
+	const searchTerm = String(url.searchParams.get('q'))
 
 	if (!searchTerm || searchTerm.trim().length < 3 || searchTerm.length > 20)
 		return null
@@ -215,7 +234,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 		const like = `%${field.trim()}%`
 
 		switch (keyword.toLowerCase()) {
-			case searchKeywords.Account:
+			case searchKeywords.Account.key:
 				accounts = await prisma.account.findMany({
 					where: {
 						// companyId: user.userCompanies[0].companyId
@@ -232,7 +251,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 				})
 				break
 
-			case searchKeywords.Account_UID:
+			case searchKeywords.Account_UID.key:
 				accounts = await prisma.account.findMany({
 					where: {
 						// companyId: user.userCompanies[0].companyId
@@ -249,7 +268,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 				})
 				break
 
-			case searchKeywords.Invoice:
+			case searchKeywords.Invoice.key:
 				saleInvoices = await prisma.saleInvoice.findMany({
 					where: {
 						// companyId: user.userCompanies[0].companyId
@@ -280,7 +299,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 				})
 				break
 
-			case searchKeywords.Bill:
+			case searchKeywords.Bill.key:
 				purchaseBills = await prisma.purchaseBill.findMany({
 					where: {
 						// companyId: user.userCompanies[0].companyId
@@ -319,20 +338,38 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function CompanySearch() {
 	const data = useLoaderData<typeof loader>()
 
+	const params = useParams()
+
 	return (
 		<>
 			<h2 className="text-h3 md:text-h2">Discover</h2>
 
-			<div className="space-y-2">
-				<SearchBar status="idle" action="" autoSubmit autoFocusSearch />
+			<div>
+				<SearchBar
+					status="idle"
+					action=""
+					autoSubmit
+					autoFocusSearch
+					searchParam="q"
+				/>
 
-				<div className="flex items-center space-x-4">
-					<Link to="hello" className="text-primary">
-						Advanced Search
-					</Link>
-					<Link to="hello" className="text-primary">
-						Filter
-					</Link>
+				<div className="mt-1 flex flex-col gap-2 text-sm font-light text-foreground/45 md:flex-row md:items-center">
+					Search faster using keywords
+					<div className="flex gap-2 overflow-x-auto">
+						<TooltipProvider>
+							{Object.entries(searchKeywords).map(([_, value]) => (
+								<Tooltip key={value.key}>
+									<TooltipTrigger
+										tabIndex={-1}
+										className="rounded-lg bg-muted p-1"
+									>
+										<Icon name="question-mark-circled">{value.key}:</Icon>
+									</TooltipTrigger>
+									<TooltipContent side="bottom">{value.info}</TooltipContent>
+								</Tooltip>
+							))}
+						</TooltipProvider>
+					</div>
 				</div>
 			</div>
 
@@ -356,36 +393,12 @@ export default function CompanySearch() {
 											items={[
 												{
 													label: 'New Sale',
-													href: `../sales/new/${account.id}`,
+													href: `/c/${params.companyId}/sales/new-invoice?accountId=${account.id}`,
 													icon: 'file-text',
 												},
-												{ label: 'Edit', href: 'hello', icon: 'pencil-1' },
+												{ label: 'View', href: 'hello', icon: 'avatar' },
 											]}
 										/>
-									</li>
-								))}
-								{data.accounts.map(account => (
-									<li
-										key={account.id}
-										className="flex items-center justify-between rounded-lg border p-2"
-										onClick={() => {}}
-									>
-										<div>
-											{account.name} - {account.uniqueId}
-										</div>
-										{/* <SimpleDropDown items={accountDropdownItems} /> */}
-									</li>
-								))}
-								{data.accounts.map(account => (
-									<li
-										key={account.id}
-										className="flex items-center justify-between rounded-lg border p-2"
-										onClick={() => {}}
-									>
-										<div>
-											{account.name} - {account.uniqueId}
-										</div>
-										{/* <SimpleDropDown items={accountDropdownItems} /> */}
 									</li>
 								))}
 							</ul>

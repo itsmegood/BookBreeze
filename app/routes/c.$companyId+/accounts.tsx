@@ -12,7 +12,7 @@ const salesRoutes = [
 	},
 	{
 		title: 'Customers',
-		href: 'customers',
+		href: 'cust',
 	},
 	{
 		title: 'New Account',

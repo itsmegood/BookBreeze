@@ -51,7 +51,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 	return json({ account })
 }
 
-export default function CompanyAccount() {
+export default function CompanyAccountCustomer() {
 	const data = useLoaderData<typeof loader>()
 
 	return (
