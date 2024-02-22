@@ -57,6 +57,35 @@ export function Field({
 	)
 }
 
+export function MinimalField({
+	labelProps,
+	inputProps,
+	errors,
+	className,
+}: {
+	labelProps?: React.LabelHTMLAttributes<HTMLLabelElement>
+	inputProps: React.InputHTMLAttributes<HTMLInputElement>
+	errors?: ListOfErrors
+	className?: string
+}) {
+	const fallbackId = useId()
+	const id = inputProps.id ?? fallbackId
+	const errorId = errors?.length ? `${id}-error` : undefined
+	return (
+		<div className={className}>
+			<Label htmlFor={id} {...labelProps} />
+			<input
+				className="w-full bg-transparent focus:bg-muted focus:outline-none"
+				id={id}
+				aria-invalid={errorId ? true : undefined}
+				aria-describedby={errorId}
+				{...inputProps}
+			/>
+			{errorId ? <ErrorList id={errorId} errors={errors} /> : null}
+		</div>
+	)
+}
+
 export function TextareaField({
 	labelProps,
 	textareaProps,

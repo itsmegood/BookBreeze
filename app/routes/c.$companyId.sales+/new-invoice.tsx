@@ -2,6 +2,7 @@ import { type LoaderFunctionArgs } from '@remix-run/node'
 import { json, redirect, useLoaderData } from '@remix-run/react'
 import { prisma } from '#app/utils/db.server'
 import { requireCompanyUserWithRBAC } from '#app/utils/permissions.server'
+import { SaleEditor } from './__sale-editor'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	await requireCompanyUserWithRBAC({
@@ -19,7 +20,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 	const accountId = searchParams.get('accountId')
 
-	if (!accountId || accountId.length >= 25 || accountId.length <= 36)
+	if (!accountId || accountId.length < 25 || accountId.length > 36)
 		return redirect(`/c/${params.companyId}/search?q=acc:`)
 
 	const account = await prisma.account.findFirst({
@@ -39,13 +40,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function CompanySaleNew() {
-	// const data = useLoaderData()
+	const data = useLoaderData<typeof loader>()
 
-	return <div>Hello</div>
+	return <SaleEditor sale={data.account} />
 }
 
 // ! Remove the guest stuff completely
-// export default function CompanySaleNew() {
+// export default function CompanySaleNew()
 // 	const data = useLoaderData<typeof loader>()
 
 // const params = useParams()

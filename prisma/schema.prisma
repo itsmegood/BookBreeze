@@ -308,6 +308,7 @@ model SaleInvoice {
   dueDate       DateTime // The date by which the invoice should be paid.
   totalAmount   Float // Total monetary value to be paid / received for the invoice.
   description   String?
+  onCredit      Boolean  @default(false) // Whether the invoice is on credit or not.
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

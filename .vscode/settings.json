@@ -15,5 +15,7 @@
   ],
   "workbench.editorAssociations": {
     "*.db": "sqlite-viewer.view"
-  }
+  },
+  "workbench.layoutControl.enabled": true,
+  "workbench.editor.centeredLayoutAutoResize": true
 }

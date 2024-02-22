@@ -8,7 +8,7 @@ import {
 } from '@remix-run/node'
 import { Form, redirect, useActionData } from '@remix-run/react'
 import { z } from 'zod'
-import { Field } from '#app/components/forms'
+import { Field, MinimalField } from '#app/components/forms'
 import { StatusButton } from '#app/components/ui/status-button'
 import { prisma } from '#app/utils/db.server'
 import { useIsPending } from '#app/utils/misc'
@@ -19,13 +19,14 @@ import { requireCompanyUserWithRBAC } from '#app/utils/permissions.server'
 
 const CompanySaleEditorSchema = z.object({
 	id: z.string().optional(),
-	invoiceNumber: z.string().min(4).max(24).optional(),
-	dueDate: z.string().min(3).max(40),
-	dateIssued: z.string().email().optional(),
-	issuedToId: z.string().min(7).max(15).optional(),
-	issuedById: z.string().min(4).max(40).optional(),
-	totalAmount: z.string().min(4).max(24).optional(),
-	transactionStatusKey: z.string().min(4).max(24).optional(),
+	invoiceNumber: z.number().optional(),
+	dueDate: z.string().optional(),
+	onCredit: z.boolean().optional(),
+	dateIssued: z.string().optional(),
+	issuedToId: z.string(),
+	issuedById: z.string(),
+	totalAmount: z.number(),
+	transactionStatusKey: z.string(),
 	description: z.string().min(4).max(80).optional(),
 })
 
@@ -122,14 +123,17 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export function SaleEditor({
+	account,
 	sale,
 }: {
+	account?: SerializeFrom<Pick<Account, 'id' | 'name' | 'uniqueId'>>
 	sale?: SerializeFrom<
 		Pick<
 			SaleInvoice,
 			| 'id'
 			| 'invoiceNumber'
 			| 'dueDate'
+			| 'onCredit'
 			| 'dateIssued'
 			| 'issuedToId'
 			| 'issuedById'
@@ -152,6 +156,7 @@ export function SaleEditor({
 			return parseWithZod(formData, { schema: CompanySaleEditorSchema })
 		},
 		defaultValue: {
+			...account,
 			...sale,
 		},
 		shouldRevalidate: 'onBlur',
@@ -163,9 +168,8 @@ export function SaleEditor({
 			{sale ? <input type="hidden" name="id" value={sale.id} /> : null}
 
 			<div className="grid gap-x-6 sm:grid-cols-6">
-				<div className="sm:col-span-3">
-					<Field
-						labelProps={{ children: 'Full Name *' }}
+				<div className="sm:col-span-4">
+					<MinimalField
 						inputProps={{
 							...getInputProps(fields.name, { type: 'text' }),
 							autoFocus: true,
@@ -174,7 +178,14 @@ export function SaleEditor({
 					/>
 				</div>
 
-				<div className="sm:col-span-3">
+				<div className="sm:col-span-1">
+					<Field
+						labelProps={{ children: 'Unique ID' }}
+						inputProps={getInputProps(fields.uniqueId, { type: 'text' })}
+						errors={fields.uniqueId.errors}
+					/>
+				</div>
+				<div className="sm:col-span-1">
 					<Field
 						labelProps={{ children: 'Unique ID' }}
 						inputProps={getInputProps(fields.uniqueId, { type: 'text' })}
