@@ -17,5 +17,9 @@
     "*.db": "sqlite-viewer.view"
   },
   "workbench.layoutControl.enabled": true,
-  "workbench.editor.centeredLayoutAutoResize": true
+  "workbench.editor.centeredLayoutAutoResize": true,
+  "editor.minimap.enabled": false,
+  "editor.fontFamily": "\"Dank Mono\",Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontSize": 20,
+  "files.autoSave": "onFocusChange"
 }
