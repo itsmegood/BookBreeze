@@ -1,80 +1,46 @@
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
-import { invariant } from '@epic-web/invariant'
 import {
 	json,
 	redirect,
-	type LoaderFunctionArgs,
 	type ActionFunctionArgs,
+	type LoaderFunctionArgs,
 	type MetaFunction,
 } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { ErrorList, Field } from '#app/components/forms.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
-import { requireAnonymous, resetEmailPassword } from '#app/utils/auth.server.ts'
-import { prisma } from '#app/utils/db.server.ts'
+import { requireAnonymous, resetUserPassword } from '#app/utils/auth.server.ts'
 import { useIsPending } from '#app/utils/misc.tsx'
 import { PasswordAndConfirmPasswordSchema } from '#app/utils/user-validation.ts'
 import { verifySessionStorage } from '#app/utils/verification.server.ts'
-import { type VerifyFunctionArgs } from './verify.tsx'
 
-const resetPasswordEmailSessionKey = 'resetPasswordEmail'
-
-export async function handleVerification({ submission }: VerifyFunctionArgs) {
-	invariant(
-		submission.status === 'success',
-		'Submission should be successful by now',
-	)
-	const target = submission.value.target
-	const user = await prisma.user.findFirst({
-		// where: { OR: [{ email: target }, { username: target }] },
-		where: { email: target },
-		select: { email: true },
-	})
-	// we don't want to say the user is not found if the email is not found
-	// because that would allow an attacker to check if an email is registered
-	if (!user) {
-		return json(
-			{
-				result: submission.reply({ fieldErrors: { code: ['Invalid code'] } }),
-			},
-			{
-				status: 400,
-			},
-		)
-	}
-
-	const verifySession = await verifySessionStorage.getSession()
-	verifySession.set(resetPasswordEmailSessionKey, user.email)
-	return redirect('/reset-password', {
-		headers: {
-			'set-cookie': await verifySessionStorage.commitSession(verifySession),
-		},
-	})
-}
+export const resetPasswordUsernameSessionKey = 'resetPasswordUsername'
 
 const ResetPasswordSchema = PasswordAndConfirmPasswordSchema
 
-async function requireResetPasswordEmail(request: Request) {
+async function requireResetPasswordUsername(request: Request) {
 	await requireAnonymous(request)
 	const verifySession = await verifySessionStorage.getSession(
 		request.headers.get('cookie'),
 	)
-	const resetPasswordEmail = verifySession.get(resetPasswordEmailSessionKey)
-	if (typeof resetPasswordEmail !== 'string' || !resetPasswordEmail) {
+	const resetPasswordUsername = verifySession.get(
+		resetPasswordUsernameSessionKey,
+	)
+	if (typeof resetPasswordUsername !== 'string' || !resetPasswordUsername) {
 		throw redirect('/login')
 	}
-	return resetPasswordEmail
+	return resetPasswordUsername
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-	const resetPasswordEmail = await requireResetPasswordEmail(request)
-	return json({ resetPasswordEmail })
+	const resetPasswordUsername = await requireResetPasswordUsername(request)
+	return json({ resetPasswordUsername })
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-	const resetPasswordEmail = await requireResetPasswordEmail(request)
+	const resetPasswordUsername = await requireResetPasswordUsername(request)
 	const formData = await request.formData()
 	const submission = parseWithZod(formData, {
 		schema: ResetPasswordSchema,
@@ -87,7 +53,7 @@ export async function action({ request }: ActionFunctionArgs) {
 	}
 	const { password } = submission.value
 
-	await resetEmailPassword({ email: resetPasswordEmail, password })
+	await resetUserPassword({ username: resetPasswordUsername, password })
 	const verifySession = await verifySessionStorage.getSession()
 	return redirect('/login', {
 		headers: {
@@ -120,7 +86,7 @@ export default function ResetPasswordPage() {
 			<div className="text-center">
 				<h1 className="text-h1">Password Reset</h1>
 				<p className="mt-3 text-body-md text-muted-foreground">
-					Hi, {data.resetPasswordEmail}. No worries. It happens all the time.
+					Hi, {data.resetPasswordUsername}. No worries. It happens all the time.
 				</p>
 			</div>
 			<div className="mx-auto mt-16 min-w-full max-w-sm sm:min-w-[368px]">

@@ -4,9 +4,9 @@ import { useLoaderData } from '@remix-run/react'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
-import { NoteEditor, action } from './__note-editor.tsx'
+import { NoteEditor } from './__note-editor.tsx'
 
-export { action }
+export { action } from './__note-editor.server.tsx'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
 	const userId = await requireUserId(request)
@@ -42,7 +42,7 @@ export function ErrorBoundary() {
 		<GeneralErrorBoundary
 			statusHandlers={{
 				404: ({ params }) => (
-					<p>No note with the id == 0 g "{params.noteId}" exists</p>
+					<p>No note with the id "{params.noteId}" exists</p>
 				),
 			}}
 		/>

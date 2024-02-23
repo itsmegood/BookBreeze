@@ -10,13 +10,12 @@ import {
 	type MetaFunction,
 } from '@remix-run/node'
 import {
-	Links,
-	LiveReload,
+		Links,
 	Meta,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
-	useFetchers,
+		useFetchers,
 	useLoaderData,
 	useRouteLoaderData,
 } from '@remix-run/react'
@@ -28,7 +27,7 @@ import { EpicProgress } from './components/progress-bar.tsx'
 import { useToast } from './components/toaster.tsx'
 import { href as iconsHref } from './components/ui/icon.tsx'
 import { EpicToaster } from './components/ui/sonner.tsx'
-import tailwindStyleSheetUrl from './styles/tailwind.css'
+import tailwindStyleSheetUrl from './styles/tailwind.css?url'
 import { getUserId, logout } from './utils/auth.server.ts'
 import { ClientHintCheck, getHints, useHints } from './utils/client-hints.tsx'
 import { prisma } from './utils/db.server.ts'
@@ -195,7 +194,6 @@ function Document({
 				/>
 				<ScrollRestoration nonce={nonce} />
 				<Scripts nonce={nonce} />
-				<LiveReload nonce={nonce} />
 			</body>
 		</html>
 	)
@@ -204,8 +202,8 @@ function Document({
 function App() {
 	const data = useLoaderData<typeof loader>()
 	const nonce = useNonce()
-	const theme = useTheme()
-
+		const theme = useTheme()
+	
 	useToast(data.toast)
 
 	return (
@@ -218,8 +216,8 @@ function App() {
 					<div className="container flex justify-between p-6">
 						<Logo />
 						<ThemeSwitch />
-					</div>
-				</div> */}
+				</div>
+</div> */}
 			</div>
 			<EpicToaster
 				closeButton
