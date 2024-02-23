@@ -142,7 +142,6 @@ test('gives an error if the account is already connected to another user', async
 	await prisma.user.create({
 		data: {
 			...createUser(),
-			platformStatusKey: 'ACTIVE',
 			connections: {
 				create: {
 					providerName: GITHUB_PROVIDER_NAME,
@@ -247,7 +246,6 @@ async function setupUser(userData = createUser()) {
 			user: {
 				create: {
 					...userData,
-					platformStatusKey: 'active',
 				},
 			},
 		},
