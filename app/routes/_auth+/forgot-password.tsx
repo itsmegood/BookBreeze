@@ -16,8 +16,8 @@ import { StatusButton } from '#app/components/ui/status-button.tsx'
 import { prisma } from '#app/utils/db.server.ts'
 import { sendEmail } from '#app/utils/email.server.ts'
 import { checkHoneypot } from '#app/utils/honeypot.server.ts'
-import { EmailSchema } from '#app/utils/user-validation.ts'
-import { prepareVerification } from './verify.tsx'
+import { EmailSchema} from '#app/utils/user-validation.ts'
+import { prepareVerification } from './verify.server.ts'
 
 const ForgotPasswordSchema = z.object({
 	email: EmailSchema,
@@ -26,7 +26,6 @@ const ForgotPasswordSchema = z.object({
 export async function action({ request }: ActionFunctionArgs) {
 	const formData = await request.formData()
 	checkHoneypot(formData)
-
 	const submission = await parseWithZod(formData, {
 		schema: ForgotPasswordSchema.superRefine(async (data, ctx) => {
 			const user = await prisma.user.findFirst({
@@ -46,7 +45,6 @@ export async function action({ request }: ActionFunctionArgs) {
 		}),
 		async: true,
 	})
-
 	if (submission.status !== 'success') {
 		return json(
 			{ result: submission.reply() },
