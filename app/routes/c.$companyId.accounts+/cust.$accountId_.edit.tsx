@@ -4,9 +4,9 @@ import { useLoaderData } from '@remix-run/react'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { prisma } from '#app/utils/db.server.ts'
 import { requireCompanyUserWithRBAC } from '#app/utils/permissions.server.ts'
-import { AccountEditor, action } from './__account-editor.js'
+import { AccountEditor } from './__account-editor.tsx'
 
-export { action }
+export { action } from './__account-editor.server.tsx'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
 	await requireCompanyUserWithRBAC({

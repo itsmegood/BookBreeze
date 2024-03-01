@@ -2,22 +2,19 @@ import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { type Account } from '@prisma/client'
 import {
-	json,
-	type ActionFunctionArgs,
 	type SerializeFrom,
 } from '@remix-run/node'
-import { Form, redirect, useActionData } from '@remix-run/react'
+import { Form, useActionData } from '@remix-run/react'
 import { z } from 'zod'
 import { Field } from '#app/components/forms'
 import { StatusButton } from '#app/components/ui/status-button'
-import { prisma } from '#app/utils/db.server'
 import { useIsPending } from '#app/utils/misc'
-import { requireCompanyUserWithRBAC } from '#app/utils/permissions.server'
+import {type action} from "./__account-editor.server"
 
 // TODO: Make a better component to handle country, state, and city inputs
 // ? Maybe a select component with api data
 
-const CompanyAccountsEditorSchema = z.object({
+export const CompanyAccountsEditorSchema = z.object({
 	id: z.string().optional(),
 	name: z.string().min(3).max(40),
 	uniqueId: z.string().min(4).max(24).optional(),
@@ -30,98 +27,6 @@ const CompanyAccountsEditorSchema = z.object({
 	zip: z.string().min(4).max(12).optional(),
 	// description: z.string().min(4).max(80).optional(),
 })
-
-export async function action({ request, params }: ActionFunctionArgs) {
-	const user = await requireCompanyUserWithRBAC({
-		request,
-		companyId: params.companyId!,
-		permission: 'create:company-account',
-		select: {
-			userCompanies: {
-				select: {
-					id: true,
-				},
-			},
-		},
-	})
-
-	const formData = await request.formData()
-
-	const submission = await parseWithZod(formData, {
-		schema: CompanyAccountsEditorSchema.superRefine(async (data, ctx) => {
-			const checkName = await prisma.company.findFirst({
-				where: {
-					accounts: {
-						some: {
-							name: data.name,
-						},
-					},
-				},
-			})
-
-			if (checkName) {
-				ctx.addIssue({
-					path: ['name'],
-					code: z.ZodIssueCode.custom,
-					message: 'Name already exists',
-				})
-			}
-		}),
-		async: true,
-	})
-
-	if (submission.status !== 'success') {
-		return json(
-			{ result: submission.reply() },
-			{ status: submission.status === 'error' ? 400 : 200 },
-		)
-	}
-
-	const {
-		id: accountId,
-		name,
-		uniqueId,
-		email,
-		phone,
-		address,
-		city,
-		state,
-		country,
-		zip,
-	} = submission.value
-
-	await prisma.account.upsert({
-		where: {
-			id: accountId ?? '__new_account__',
-		},
-		create: {
-			name,
-			uniqueId,
-			email,
-			phone,
-			address,
-			city,
-			state,
-			country,
-			zip,
-			companyId: params.companyId!,
-			createdById: user.userCompanies[0].id,
-		},
-		update: {
-			name,
-			uniqueId,
-			email,
-			phone,
-			address,
-			city,
-			state,
-			country,
-			zip,
-		},
-	})
-
-	return redirect(`/c/${params.companyId}/customers`)
-}
 
 export function AccountEditor({
 	account,
